@@ -1,0 +1,26 @@
+Package: pxtextmineR
+Title: An R Wrapper for Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/)
+Version: 0.1.0
+Authors@R: 
+    person(given = "Andreas D",
+           family = "Soteriades",
+           role = c("aut", "cre"),
+           email = "andreas.soteriades@nottshc.nhs.uk",
+           comment = c(ORCID = "https://orcid.org/0000-0002-5992-9602"))
+Description: An R wrapper for Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/) 
+  library- a pipeline to classify text-based patient experience data.\n
+  Package `pxtextmineR` does not wrap _everything_ from `pxtextmining`, but 
+  selected functions that will offer R users new opportunities for modelling. For 
+  example, the whole [`Scikit-learn`](https://scikit-learn.org/stable/index.html) 
+  (Pedregosa et al., 2011) text classification pipeline is wrapped, as 
+  well as helper functions for e.g. sentiment analysis with Python's 
+  [`textBlob`](https://textblob.readthedocs.io/en/dev/) and
+  [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    magrittr,
+    reticulate

@@ -1,5 +1,37 @@
-text_classification_pipeline_r <- 
-  function(filename, 
+#' Whole pipeline
+#'
+#' @param filename
+#' @param target
+#' @param predictor
+#' @param test_size
+#' @param ordinal
+#' @param tknz
+#' @param metric
+#' @param cv
+#' @param n_iter
+#' @param n_jobs
+#' @param verbose
+#' @param learners
+#' @param objects_to_save
+#' @param save_objects_to_server
+#' @param save_objects_to_disk
+#' @param save_pipeline_as
+#' @param results_folder_name
+#' @param reduce_criticality
+#' @param theme
+#' @param python_setup
+#' @param sys_setenv
+#' @param which_python
+#' @param which_venv
+#' @param venv_name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+
+text_classification_pipeline_r <-
+  function(filename,
            target, predictor, test_size = 0.33,
            ordinal = FALSE,
            tknz = "spacy",
@@ -20,31 +52,31 @@ text_classification_pipeline_r <-
            save_pipeline_as = "default",
            results_folder_name = "results",
            reduce_criticality = FALSE,
-           theme = NULL, 
+           theme = NULL,
            python_setup = FALSE,
-           sys_setenv, 
-           which_python, 
+           sys_setenv,
+           which_python,
            which_venv,
            venv_name
   ) {
-    
+
     if (python_setup) {
       experienceAnalysis::prep_python(sys_setenv, which_python, which_venv,
                                       venv_name)
     }
-    
+
     cv <- reticulate::r_to_py(as.integer(cv))
     n_iter <- reticulate::r_to_py(as.integer(n_iter))
     n_jobs <- reticulate::r_to_py(as.integer(n_jobs))
     verbose <- reticulate::r_to_py(as.integer(verbose))
-    
+
     pxpipeline <- reticulate::py_run_string(
       "from pxtextmining.pipelines.text_classification_pipeline import text_classification_pipeline"
     )$text_classification_pipeline
-    
-    re <- pxpipeline(filename, 
-                     target, 
-                     predictor, 
+
+    re <- pxpipeline(filename,
+                     target,
+                     predictor,
                      test_size,
                      ordinal,
                      tknz,
@@ -58,7 +90,7 @@ text_classification_pipeline_r <-
                      results_folder_name,
                      reduce_criticality,
                      theme)
-    
+
     return(re)
 }
 

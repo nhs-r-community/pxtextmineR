@@ -1,4 +1,10 @@
+
 # pxtextmineR
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
+
 An R wrapper for Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/) 
 library- a pipeline to classify text-based patient experience data.
 
