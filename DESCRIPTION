@@ -1,5 +1,5 @@
 Package: pxtextmineR
-Title: An R Wrapper for Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/)
+Title: An R Wrapper for Python's "pxtextmining" library
 Version: 0.1.0
 Authors@R: 
     person(given = "Andreas D",
@@ -24,3 +24,7 @@ RoxygenNote: 7.1.1
 Imports: 
     magrittr,
     reticulate
+Remotes:
+    CDU-data-science-team/experienceAnalysis
+Depends: 
+    R (>= 2.10)
