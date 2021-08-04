@@ -8,6 +8,8 @@
 An R wrapper for Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/) 
 library- a pipeline to classify text-based patient experience data.
 
+**Function documentation**: https://nhs-r-community.github.io/pxtextmineR/.
+
 Package `pxtextmineR` does not wrap _everything_ from `pxtextmining`, but 
 selected functions that will offer R users new opportunities for modelling. For 
 example, the whole [`Scikit-learn`](https://scikit-learn.org/stable/index.html) 
@@ -17,7 +19,7 @@ well as helper functions for e.g. sentiment analysis with Python's
 [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
 
 ## Installation
-devtools::install_github("nhs-r-community/pxtextmineR")
+`devtools::install_github("nhs-r-community/pxtextmineR")`
 
 ## References
 Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O., 
