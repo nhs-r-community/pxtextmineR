@@ -19,9 +19,10 @@ factory_data_load_and_split_r(
 )
 }
 \arguments{
-\item{filename}{A string with the dataset name (CSV), including full path to
-the data folder (if not in the project's working directory), and the data
-type suffix (".csv").}
+\item{filename}{A data frame with the data (class and text columns),
+otherwise the dataset name (CSV), including full path to the data folder
+(if not in the project's working directory), and the data type suffix
+(".csv").}
 
 \item{target}{A string with the name of the response variable.}
 
@@ -77,6 +78,48 @@ A list of length 6: \code{x_train} (data frame), \code{x_test} (data frame),
 \code{index_train} and \code{index_test} respectively.
 }
 \description{
-Splits the dataset with \code{Scikit-learn} and returns the train/test data and
-their row/position indices.
+Splits the dataset with \href{https://scikit-learn.org/stable/index.html}{\code{Scikit-learn}}
+and returns the train/test data and their row/position indices.
+}
+\examples{
+# One can set the python.exe and virtual environment directly in the pxtextmineR
+# functions or globally, with experienceAnalysis
+# (https://github.com/CDU-data-science-team/experienceAnalysis).
+
+experienceAnalysis::prep_python(
+  sys_setenv = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
+  which_python = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
+  which_venv = "conda",
+  venv_name = "pxtextmining_venv"
+)
+
+data_splits <- pxtextmineR::factory_data_load_and_split_r(
+  filename = text_data,
+  target = "label",
+  predictor = "feedback",
+  test_size = 0.33)
+
+# Let's take a look at the returned list
+str(data_splits)
+
+# Each record in the split data is tagged with the row index of the original dataset
+head(rownames(data_splits$x_train))
+head(names(data_splits$y_train))
+
+# Note that, in Python, indices start from 0 and go up to number_of_records - 1
+all_indices <- data_splits$y_train \%>\%
+  names() \%>\%
+  c(names(data_splits$y_test)) \%>\%
+  as.numeric() \%>\%
+  sort()
+head(all_indices) # Starts from zero
+tail(all_indices) # Ends in nrow(text_data) - 1
+length(all_indices) == nrow(text_data)
+}
+\references{
+Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
+Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A.,
+Cournapeau D., Brucher M., Perrot M. & Duchesnay E. (2011),
+\href{https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html}{Scikit-learn: Machine Learning in Python}.
+\emph{Journal of Machine Learning Research} 12:2825--2830
 }

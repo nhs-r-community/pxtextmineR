@@ -2,7 +2,7 @@
 % Please edit documentation in R/factory_pipeline_r.R
 \name{factory_pipeline_r}
 \alias{factory_pipeline_r}
-\title{Pipeline}
+\title{Prepare and fit a text classification pipeline}
 \usage{
 factory_pipeline_r(
   x,
@@ -11,8 +11,8 @@ factory_pipeline_r(
   ordinal = FALSE,
   metric = "class_balance_accuracy_score",
   cv = 5,
-  n_iter = 100,
-  n_jobs = 5,
+  n_iter = 2,
+  n_jobs = 1,
   verbose = 3,
   learners = c("SGDClassifier", "RidgeClassifier", "Perceptron",
     "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB", "MultinomialNB",
@@ -26,11 +26,214 @@ factory_pipeline_r(
 )
 }
 \arguments{
-\item{venv_name}{}
+\item{x}{A data frame with the text feature.}
+
+\item{y}{A vector with the response variable.}
+
+\item{tknz}{Tokenizer to use ("spacy" or "wordnet").}
+
+\item{ordinal}{Whether to fit an ordinal classification model. The ordinal
+model is the implementation of \href{https://www.cs.waikato.ac.nz/~eibe/pubs/ordinal_tech_report.pdf}{Frank and Hall (2001)}
+that can use any standard classification model that calculates
+probabilities.}
+
+\item{metric}{A string. Scorer to use during pipeline tuning
+("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
+"class_balance_accuracy_score").}
+
+\item{cv}{Number of cross-validation folds.}
+
+\item{n_iter}{Number of parameter settings that are sampled (see
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{\code{sklearn.model_selection.RandomizedSearchCV}}).}
+
+\item{n_jobs}{Number of jobs to run in parallel (see \code{sklearn.model_selection.RandomizedSearchCV}).
+\strong{NOTE:} If your machine does not have the number of cores specified in
+\code{n_jobs}, then an error will be returned.}
+
+\item{verbose}{Controls the verbosity (see \code{sklearn.model_selection.RandomizedSearchCV}).}
+
+\item{learners}{A vector of \code{Scikit-learn} names of the learners to tune. Must
+be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
+"PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
+"MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
+"RandomForestClassifier". When a single model is used, it can be passed as
+a string.}
+
+\item{theme}{For internal use by Nottinghamshire Healthcare NHS Foundation
+Trust or other trusts that use theme labels ("Access",
+"Environment/ facilities" etc.). The column name of the theme variable.
+Defaults to \code{NULL}. If supplied, the theme variable will be used as a
+predictor (along with the text predictor) in the model that is fitted
+with criticality as the response variable. The rationale is two-fold.
+First, to help the model improve predictions on criticality when the
+theme labels are readily available. Second, to force the criticality for
+"Couldn't be improved" to always be "3" in the training and test data, as
+well as in the predictions. This is the only criticality value that
+"Couldn't be improved" can take, so by forcing it to always be "3", we
+are improving model performance, but are also correcting possible
+erroneous assignments of values other than "3" that are attributed to
+human error.}
+
+\item{python_setup}{A \code{logical} whether to set up the \code{Python} version,
+virtual environment etc. that can be controlled with arguments
+\code{sys_setenv}, \code{which_python}, \code{which_venv} and \code{venv_name}. These
+arguments will be ignored when \code{python_setup} is \code{FALSE}. The purpose of
+\code{python_setup} is that users may wish to control the \code{Python} parameters
+outside the actual function, for the session in general.}
+
+\item{sys_setenv}{A string in the form "path_to_python/python.exe",
+indicating which Python to use (e.g. from a virtual environment).}
+
+\item{which_python}{Same as \code{sys_setenv}.}
+
+\item{which_venv}{A string that can be "conda", "miniconda" or "python".}
+
+\item{venv_name}{String. The name of the virtual environment.}
+
+\item{text_col_name}{A string with the column name of the text variable.}
 }
 \value{
-
+A fitted \code{Scikit-learn} pipeline containing a number of objects that
+can be accessed with the \code{$} sign (see examples). For a partial list see
+"Atributes" in \href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{\code{sklearn.model_selection.RandomizedSearchCV}}.
+Do not be surprised if more objects are in the pipeline than those in the
+aforementioned "Attributes" list. Python objects can contain a wide array
+of objects, from numeric results (e.g. the pipeline's accuracy),
+to \emph{methods} (i.e. functions in the R lingo) and \emph{classes}. In Python,
+these are normally accessed with \verb{object.<whatever>}, but in R the
+command is \verb{object$<whatever>}. For instance, one can access method
+\code{predict()} to make predictions on unseen data. See examples.
 }
 \description{
-Pipeline
+Prepare and fit a text classification pipeline with
+\href{https://scikit-learn.org/stable/index.html}{\code{Scikit-learn}}.
+}
+\details{
+The pipeline's parameter grid switches between two approaches to text
+classification: Bag-of-Words and Embeddings. For the former, both TF-IDF and
+raw counts are tried out.
+
+The pipeline does the following:
+
+\itemize{
+\item{Feature engineering:
+\itemize{
+\item{Converts text into TF-IDFs or \href{https://nlp.stanford.edu/projects/glove/}{\code{GloVe}}
+word vectors with \href{https://spacy.io/}{\code{spaCy}}.}
+\item{Creates a new feature that is the length of the text in
+each record.}
+\item{Performs sentiment analysis on the text feature and creates
+new features that are all scores/indicators produced by
+\href{https://textblob.readthedocs.io/en/dev/}{\code{TextBlob}}
+and \href{https://pypi.org/project/vaderSentiment/}{\code{vaderSentiment}}.}
+\item{Applies \href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html}{\code{sklearn.preprocessing.KBinsDiscretizer}}
+to the text length and sentiment indicator features, and
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html}{\code{sklearn.preprocessing.StandardScaler}}
+to the embeddings (word vectors).}
+}
+}
+\item{Up-sampling of rare classes: uses \href{https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html#imblearn.over_sampling.RandomOverSampler}{\code{imblearn.over_sampling.RandomOverSampler}}
+to up-sample rare classes. Currently the threshold to consider a
+class as rare and the up-balancing values are fixed and cannot be
+user-defined.}
+\item{Tokenization and lemmatization of the text feature: uses \code{spaCy}
+(default) or \href{https://www.nltk.org/}{\code{NLTK}}. It also strips
+punctuation, excess spaces, and metacharacters "r" and "n" from the
+text. It converts emojis into \code{"__text__"} (where "text" is the emoji
+name), and NA/NULL values into \code{"__notext__"} (the pipeline does get
+rid of records with no text, but this conversion at least deals with
+any escaping ones).}
+\item{Feature selection: Uses \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectPercentile.html}{\code{sklearn.feature_selection.SelectPercentile}}
+with \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html#sklearn.feature_selection.chi2}{\code{sklearn.feature_selection.chi2}}
+for TF-IDFs or \href{https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html#sklearn-feature-selection-f-classif}{\code{sklearn.feature_selection.f_classif}}
+for embeddings.}
+\item{Fitting and benchmarking of user-supplied \code{Scikit-learn}
+\href{https://scikit-learn.org/stable/modules/classes.html}{estimators}.}
+}
+
+The numeric values in the grid are currently lists/tuples (Python objects) of
+values that are defined either empirically or are based on the published
+literature (e.g. for Random Forest, see \href{https://arxiv.org/abs/1802.09596}{\verb{Probst et al. 2019}}).
+Values may be replaced by appropriate distributions in a future release.
+}
+\note{
+The pipeline uses the tokenizers of \code{Python} library \code{pxtextmining}.
+Any warnings from \code{Scikit-learn} like \verb{UserWarning: The parameter 'token_pattern' will not be used since 'tokenizer' is not None'} can
+therefore be safely ignored.\cr\cr
+Also, any warnings about over-sampling can also be safely ignored. These
+warnings are simply a result of an internal check in the over-sampler of
+\href{https://imbalanced-learn.org/stable/install.html}{\code{imblearn}}.
+}
+\examples{
+# One can set the python.exe and virtual environment directly in the pxtextmineR
+# functions or globally, with experienceAnalysis
+# (https://github.com/CDU-data-science-team/experienceAnalysis).
+
+experienceAnalysis::prep_python(
+  sys_setenv = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
+  which_python = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
+  which_venv = "conda",
+  venv_name = "pxtextmining_venv"
+)
+
+# Prepare training and test sets
+data_splits <- pxtextmineR::factory_data_load_and_split_r(
+  filename = text_data,
+  target = "label",
+  predictor = "feedback",
+  test_size = 0.90) # Make a small training set for a faster run in this example
+
+# Let's take a look at the returned list
+str(data_splits)
+
+# Fit the pipeline
+pipe <- pxtextmineR::factory_pipeline_r(
+  x = data_splits$x_train,
+  y = data_splits$y_train,
+  tknz = "spacy",
+  ordinal = FALSE,
+  metric = "accuracy_score",
+  cv = 2, n_iter = 1, n_jobs = 1, verbose = 3,
+  learners = "SGDClassifier"
+)
+
+# Mean cross-validated score of the best_estimator
+pipe$best_score_
+
+# Best parameters during tuning
+pipe$best_params_
+
+# Make predictions
+preds <- pipe$predict(data_splits$x_test)
+head(preds)
+
+# Performance on test set #
+# Can be done using the pipe's score() method
+pipe$score(data_splits$x_test, data_splits$y_test)
+
+# Or using dplyr
+data_splits$y_test \%>\%
+  data.frame() \%>\%
+  dplyr::rename(true = '.') \%>\%
+  dplyr::mutate(
+    pred = preds,
+    check = true == preds,
+    check = sum(check) / nrow(.)
+  ) \%>\%
+  dplyr::pull(check) \%>\%
+  unique()
+}
+\references{
+Frank E. & Hall M. (2001). A Simple Approach to Ordinal Classification.
+\emph{Machine Learning: ECML 2001} 145--156.
+
+Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
+Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A.,
+Cournapeau D., Brucher M., Perrot M. & Duchesnay E. (2011),
+\href{https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html}{Scikit-learn: Machine Learning in Python}.
+\emph{Journal of Machine Learning Research} 12:2825–-2830.
+
+Probst P., Bischl B. & Boulesteix A-L (2018). Tunability: Importance of
+Hyperparameters of Machine Learning Algorithms.
+\url{https://arxiv.org/abs/1802.09596}
 }
