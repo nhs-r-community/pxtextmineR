@@ -16,9 +16,12 @@ well as helper functions for e.g. sentiment analysis with Python's
 [`textBlob`](https://textblob.readthedocs.io/en/dev/) and
 [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
 
+## Installation
+devtools::install_github("nhs-r-community/pxtextmineR")
+
 ## References
 Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O., 
 Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A., 
 Cournapeau D., Brucher M., Perrot M. & Duchesnay E. (2011), 
 [Scikit-learn: Machine Learning in Python](https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html). 
-_Journal of Machine Learning Research_ 12:2825–2830
+_Journal of Machine Learning Research_ 12:2825--2830.
