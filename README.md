@@ -1,9 +1,3 @@
----
-output:
-  md_document:
-    variant: gfm
----
-
 # pxtextmineR
 
 <!-- badges: start -->
