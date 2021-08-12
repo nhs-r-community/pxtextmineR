@@ -17,6 +17,9 @@ well as helper functions for e.g. sentiment analysis with Python's
 [`textBlob`](https://textblob.readthedocs.io/en/dev/) and
 [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
 
+How does wrapper work? It uses R package [`reticulate`](https://rstudio.github.io/reticulate/),
+which provides tools for interoperability between Python and R.
+
 ## Installation and setup
 There are a few things that need to be done to install and set up `pxtextmineR`.
 
