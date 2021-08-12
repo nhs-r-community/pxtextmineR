@@ -1,4 +1,4 @@
-#' Patient experience data.
+#' Patient experience data
 #'
 #' A dataset containing patient feedback from NHS Nottinghamshire Healthcare NHS
 #' Foundation trust and partner trusts about the patients' experience while in
