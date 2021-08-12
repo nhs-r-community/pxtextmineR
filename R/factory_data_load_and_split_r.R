@@ -30,24 +30,12 @@
 #'     are improving model performance, but are also correcting possible
 #'     erroneous assignments of values other than "3" that are attributed to
 #'     human error.
-#' @param python_setup A `logical` whether to set up the `Python` version,
-#'     virtual environment etc. that can be controlled with arguments
-#'     `sys_setenv`, `which_python`, `which_venv` and `venv_name`. These
-#'     arguments will be ignored when `python_setup` is `FALSE`. The purpose of
-#'     `python_setup` is that users may wish to control the `Python` parameters
-#'     outside the actual function, for the session in general.
-#' @param sys_setenv A string in the form "path_to_python/python.exe",
-#'     indicating which Python to use (e.g. from a virtual environment).
-#' @param which_python Same as `sys_setenv`.
-#' @param which_venv A string that can be "conda", "miniconda" or "python".
-#' @param venv_name String. The name of the virtual environment.
-#' @param text_col_name A string with the column name of the text variable.
 #'
 #' @return A list of length 6: `x_train` (data frame), `x_test` (data frame),
-#'     `y_train` (character vector), `y_test` (character vector), `index_train`
-#'     (integer vector), and `index_test` (integer vector). The row names
+#'     `y_train` (array), `y_test` (array), `index_training_data`
+#'     (integer vector), and `index_test_data` (integer vector). The row names
 #'     (names) of `x_train` and `x_test` (`y_train` and `y_test`) are
-#'     `index_train` and `index_test` respectively.
+#'     `index_training_data` and `index_test_data` respectively.
 #' @export
 #'
 #' @references
@@ -59,19 +47,8 @@
 
 #'
 #' @examples
-#' # One can set the python.exe and virtual environment directly in the pxtextmineR
-#' # functions or globally, with experienceAnalysis
-#' # (https://github.com/CDU-data-science-team/experienceAnalysis).
-#'
-#' experienceAnalysis::prep_python(
-#'   sys_setenv = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-#'   which_python = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-#'   which_venv = "conda",
-#'   venv_name = "pxtextmining_venv"
-#' )
-#'
 #' data_splits <- pxtextmineR::factory_data_load_and_split_r(
-#'   filename = text_data,
+#'   filename = pxtextmineR::text_data,
 #'   target = "label",
 #'   predictor = "feedback",
 #'   test_size = 0.33)
@@ -96,42 +73,30 @@
 factory_data_load_and_split_r <- function(filename, target, predictor,
                                           test_size = 0.33,
                                           reduce_criticality = FALSE,
-                                          theme = NULL,
-                                          python_setup = FALSE,
-                                          sys_setenv = NULL,
-                                          which_python = NULL,
-                                          which_venv = NULL,
-                                          venv_name = NULL)
+                                          theme = NULL)
 {
-  if (python_setup) {
-    experienceAnalysis::prep_python(sys_setenv, which_python, which_venv,
-                                    venv_name)
-  }
 
-  data_load_and_split <- reticulate::py_run_string(
-    "from pxtextmining.factories.factory_data_load_and_split import factory_data_load_and_split"
-  )$factory_data_load_and_split
+  # data_load_and_split <- reticulate::py_run_string(
+  #   "from pxtextmining.factories.factory_data_load_and_split import factory_data_load_and_split"
+  # )$factory_data_load_and_split
+
+  data_load_and_split <- on_load_data_load_and_split$factory_data_load_and_split
 
   re <- data_load_and_split(filename, target, predictor, test_size,
                             reduce_criticality, theme)
 
   names(re) <- c("x_train", "x_test", "y_train", "y_test",
-                 "index_train", "index_test")
-
-  # The target datasets y_train/test are arrays, which is a little weird.
-  # Convert to vector.
-  re$y_train <- as.vector(re$y_train)
-  re$y_test <- as.vector(re$y_test)
+                 "index_training_data", "index_test_data")
 
   # The index values for the training and test sets are returned as a Python
   # Int64Index object, which is probably useless to R users. Convert to array,
   # then to vector.
-  re$index_train <- as.integer(re$index_train$values)
-  re$index_test <- as.integer(re$index_test$values)
+  re$index_training_data <- as.integer(re$index_training_data$values)
+  re$index_test_data <- as.integer(re$index_test_data$values)
 
   # Assign the row indices of the splits to the y_train/test names.
-  names(re$y_train) <- re$index_train
-  names(re$y_test) <- re$index_test
+  names(re$y_train) <- re$index_training_data
+  names(re$y_test) <- re$index_test_data
 
   return(re)
 }
