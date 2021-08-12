@@ -7,8 +7,8 @@
 #'     otherwise the dataset name (CSV), including full path to the data folder
 #'     (if not in the project's working directory), and the data type suffix
 #'     (".csv").
-#' @param target A string with the name of the response variable.
-#' @param predictor A string with the name of the predictor variable.
+#' @param target String. The name of the response variable.
+#' @param predictor String. The name of the predictor variable.
 #' @param test_size Numeric. Proportion of data that will form the test dataset.
 #' @param reduce_criticality Logical. For internal use by Nottinghamshire
 #'     Healthcare NHS Foundation Trust or other trusts that hold data on
@@ -16,7 +16,7 @@
 #'     (respectively, "5") are assigned a criticality of "-4" (respectively, "4").
 #'     This is to avoid situations where the pipeline breaks due to a lack of
 #'     sufficient data for "-5" and/or "5". Defaults to `FALSE`.
-#' @param theme A string. For internal use by Nottinghamshire Healthcare NHS
+#' @param theme String. For internal use by Nottinghamshire Healthcare NHS
 #'     Foundation Trust or other trusts that use theme labels ("Access",
 #'     "Environment/ facilities" etc.). The column name of the theme variable.
 #'     Defaults to `NULL`. If supplied, the theme variable will be used as a

@@ -1,6 +1,6 @@
 Package: pxtextmineR
 Title: An R Wrapper for Python's "pxtextmining" library
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Andreas D",
            family = "Soteriades",

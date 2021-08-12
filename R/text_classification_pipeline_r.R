@@ -6,15 +6,15 @@
 #'     otherwise the dataset name (CSV), including full path to the data folder
 #'     (if not in the project's working directory), and the data type suffix
 #'     (".csv").
-#' @param target A string with the name of the response variable.
-#' @param predictor A string with the name of the predictor variable.
+#' @param target String. The name of the response variable.
+#' @param predictor String. The name of the predictor variable.
 #' @param test_size Numeric. Proportion of data that will form the test dataset.
 #' @param tknz Tokenizer to use ("spacy" or "wordnet").
 #' @param ordinal Whether to fit an ordinal classification model. The ordinal
 #'     model is the implementation of [Frank and Hall (2001)](https://www.cs.waikato.ac.nz/~eibe/pubs/ordinal_tech_report.pdf)
 #'     that can use any standard classification model that calculates
 #'     probabilities.
-#' @param metric A string. Scorer to use during pipeline tuning
+#' @param metric String. Scorer to use during pipeline tuning
 #'     ("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
 #'     "class_balance_accuracy_score").
 #' @param cv Number of cross-validation folds.
@@ -24,7 +24,7 @@
 #'     __NOTE:__ If your machine does not have the number of cores specified in
 #'     `n_jobs`, then an error will be returned.
 #' @param verbose Controls the verbosity (see `sklearn.model_selection.RandomizedSearchCV`).
-#' @param learners A vector of `Scikit-learn` names of the learners to tune. Must
+#' @param learners Vector. `Scikit-learn` names of the learners to tune. Must
 #'     be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
 #'     "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
 #'    "MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
@@ -36,7 +36,7 @@
 #'     (respectively, "5") are assigned a criticality of "-4" (respectively, "4").
 #'     This is to avoid situations where the pipeline breaks due to a lack of
 #'     sufficient data for "-5" and/or "5". Defaults to `FALSE`.
-#' @param theme A string. For internal use by Nottinghamshire Healthcare NHS
+#' @param theme String. For internal use by Nottinghamshire Healthcare NHS
 #'     Foundation Trust or other trusts that use theme labels ("Access",
 #'     "Environment/ facilities" etc.). The column name of the theme variable.
 #'     Defaults to `NULL`. If supplied, the theme variable will be used as a
@@ -54,8 +54,13 @@
 #' @details This function brings together the three functions that run chunks of
 #'     the process independently, namely splitting data into training and test
 #'     sets (\code{\link{factory_data_load_and_split_r}}), building and fitting
-#'     the pipeline (\code{\link{factory_pipeline_r}}), and assessing pipeline
-#'     performance (\code{\link{factory_model_performance_r}}).
+#'     the pipeline (\code{\link{factory_pipeline_r}}) on the __whole__ dataset
+#'     (train and test), and assessing pipeline performance
+#'     (\code{\link{factory_model_performance_r}}). \cr\cr
+#'     For details on what the pipeline does/how it works, see
+#'     \code{\link{factory_pipeline_r}}'s
+#'     [Details](https://nhs-r-community.github.io/pxtextmineR/reference/factory_pipeline_r.html#details)
+#'     section.
 #'
 #' @return A list of length 7:
 #'     \itemize{
@@ -71,22 +76,24 @@
 #'             `object.<whatever>`, but in R the command is `object$<whatever>`.
 #'             For instance, one can access method `predict()` to make  to make
 #'             predictions on unseen data. See Examples.}
-#'         \item{`tuning_results` A data frame with all (hyper)parameter values
+#'         \item{`tuning_results` Data frame. All (hyper)parameter values
 #'             and models tried during fitting.
 #'         }
-#'         \item{`pred` A vector with the predictions on the test
-#'             set.
-#'         }
-#'         \item{`accuracy_per_class` A data frame with accuracies per class.}
+#'         \item{`pred` Vector. The predictions on the test set.}
+#'         \item{`accuracy_per_class` Data frame. Accuracies per class.}
 #'         \item{`p_compare_models_bar` A bar plot comparing the mean scores (of
 #'             the user-supplied `metric` parameter) from the cross-validation
 #'             on the training set, for the best (hyper)parameter values for
 #'             each learner.
 #'         }
 #'         \item{`index_training_data` The row names/indices of the training
-#'             data.
+#'             data. Note that, in Python, indices start from 0 and go up to
+#'             number_of_records - 1. See Examples.
 #'         }
-#'         \item{`index_test_data` The row names/indices of the test data.}
+#'         \item{`index_test_data` The row names/indices of the test data. Note
+#'             that, in Python, indices start from 0 and go up to
+#'             number_of_records - 1. See Examples.
+#'         }
 #'     }
 #'
 #' @references
@@ -102,6 +109,87 @@
 #' @export
 #'
 #' @examples
+#' # We can prepare the data, build and fit the pipeline, and get performance
+#' # metrics, in two ways. One way is to run the factory_* functions independently
+#' # The commented out script right below would do exactly that.
+#'
+#' # Prepare training and test sets
+#' # data_splits <- pxtextmineR::factory_data_load_and_split_r(
+#' #   filename = pxtextmineR::text_data,
+#' #   target = "label",
+#' #   predictor = "feedback",
+#' #   test_size = 0.90) # Make a small training set for a faster run in this example
+#' #
+#' # # Fit the pipeline
+#' # pipe <- pxtextmineR::factory_pipeline_r(
+#' #   x = data_splits$x_train,
+#' #   y = data_splits$y_train,
+#' #   tknz = "spacy",
+#' #   ordinal = FALSE,
+#' #   metric = "accuracy_score",
+#' #   cv = 2, n_iter = 1, n_jobs = 1, verbose = 3,
+#' #   learners = c("SGDClassifier", "MultinomialNB")
+#' # )
+#' #
+#' # # Assess model performance
+#' # pipe_performance <- pxtextmineR::factory_model_performance_r(
+#' #   pipe = pipe,
+#' #   x_train = data_splits$x_train,
+#' #   y_train = data_splits$y_train,
+#' #   x_test = data_splits$x_test,
+#' #   y_test = data_splits$y_test,
+#' #   metric = "accuracy_score")
+#'
+#' # Alternatively, we can use text_classification_pipeline_r() to do everything in
+#' # one go.
+#' text_pipe <- pxtextmineR::text_classification_pipeline_r(
+#'   filename = pxtextmineR::text_data,
+#'   target = 'label',
+#'   predictor = 'feedback',
+#'   test_size = 0.33,
+#'   ordinal = FALSE,
+#'   tknz = "spacy",
+#'   metric = "class_balance_accuracy_score",
+#'   cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
+#'   learners = c("SGDClassifier", "MultinomialNB"),
+#'   reduce_criticality = FALSE,
+#'   theme = NULL
+#' )
+#'
+#' names(text_pipe)
+#'
+#' # Let's compare pipeline performance for different tunings with a range of
+#' # metrics averaging the cross-validation metrics for each fold.
+#' text_pipe$
+#'   tuning_results %>%
+#'   dplyr::select(learner, dplyr::contains("mean_test"))
+#'
+#' # A glance at the (hyper)parameters and their tuned values
+#' text_pipe$
+#'   tuning_results %>%
+#'   dplyr::select(learner, dplyr::contains("param_")) %>%
+#'   str()
+#'
+#' # Learner performance barplot
+#' text_pipe$p_compare_models_bar
+#'
+#' # Predictions on test set
+#' preds <- text_pipe$pred
+#' head(preds)
+#'
+#' # We can also get the row indices of the train and test data. Note that, in
+#' # Python, indices start from 0. For example, the row indices of a data frame
+#' # with 5 rows would be 0, 1, 2, 3 & 4.
+#' head(sort(text_pipe$index_training_data))
+#' head(sort(text_pipe$index_test_data))
+#'
+#' # Let's subset the original data set
+#' text_dataset <- pxtextmineR::text_data
+#' rownames(text_dataset) <- 0:(nrow(text_dataset) - 1)
+#' data_train <- text_dataset[text_pipe$index_training_data, ]
+#' data_test <- text_dataset[text_pipe$index_test_data, ]
+#' str(data_train)
+#' str(data_test)
 
 text_classification_pipeline_r <-
   function(filename,
@@ -109,7 +197,7 @@ text_classification_pipeline_r <-
            ordinal = FALSE,
            tknz = "spacy",
            metric = "class_balance_accuracy_score",
-           cv = 2, n_iter = 1, n_jobs = 1, verbose = 3,
+           cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
            learners = c("SGDClassifier"),
            reduce_criticality = FALSE,
            theme = NULL
@@ -146,7 +234,7 @@ text_classification_pipeline_r <-
 
     # Gather all results #
     re <- list(
-      pipe = pipe,
+      pipe = performance$pipe,
       tuning_results = performance$tuning_results,
       pred = performance$pred,
       accuracy_per_class = performance$accuracy_per_class,

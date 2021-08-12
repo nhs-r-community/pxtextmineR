@@ -135,11 +135,11 @@ Scikit-learn." />
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A data frame with the text feature.</p></td>
+      <td><p>Data frame. The text feature.</p></td>
     </tr>
     <tr>
       <th>y</th>
-      <td><p>A vector with the response variable.</p></td>
+      <td><p>Vector. The response variable.</p></td>
     </tr>
     <tr>
       <th>tknz</th>
@@ -154,7 +154,7 @@ probabilities.</p></td>
     </tr>
     <tr>
       <th>metric</th>
-      <td><p>A string. Scorer to use during pipeline tuning
+      <td><p>String. Scorer to use during pipeline tuning
 ("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
 "class_balance_accuracy_score").</p></td>
     </tr>
@@ -179,7 +179,7 @@ probabilities.</p></td>
     </tr>
     <tr>
       <th>learners</th>
-      <td><p>A vector of <code>Scikit-learn</code> names of the learners to tune. Must
+      <td><p>Vector. <code>Scikit-learn</code> names of the learners to tune. Must
 be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
 "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
 "MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
@@ -188,8 +188,8 @@ a string.</p></td>
     </tr>
     <tr>
       <th>theme</th>
-      <td><p>For internal use by Nottinghamshire Healthcare NHS Foundation
-Trust or other trusts that use theme labels ("Access",
+      <td><p>String. For internal use by Nottinghamshire Healthcare NHS
+Foundation Trust or other trusts that use theme labels ("Access",
 "Environment/ facilities" etc.). The column name of the theme variable.
 Defaults to <code>NULL</code>. If supplied, the theme variable will be used as a
 predictor (along with the text predictor) in the model that is fitted
@@ -211,12 +211,12 @@ human error.</p></td>
 can be accessed with the <code><a href='https://rdrr.io/r/base/Extract.html'>$</a></code> sign (see examples). For a partial list see
 "Atributes" in <a href='https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html'><code>sklearn.model_selection.RandomizedSearchCV</code></a>.
 Do not be surprised if more objects are in the pipeline than those in the
-aforementioned "Attributes" list. Python objects can contain a wide array
-of objects, from numeric results (e.g. the pipeline's accuracy),
+aforementioned "Attributes" list. Python objects can contain several
+objects, from numeric results (e.g. the pipeline's accuracy),
 to <em>methods</em> (i.e. functions in the R lingo) and <em>classes</em>. In Python,
 these are normally accessed with <code>object.&lt;whatever&gt;</code>, but in R the
 command is <code>object$&lt;whatever&gt;</code>. For instance, one can access method
-<code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code> to make predictions on unseen data. See examples.</p>
+<code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code> to make predictions on unseen data. See Examples.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The pipeline's parameter grid switches between two approaches to text
@@ -294,24 +294,26 @@ Hyperparameters of Machine Learning Algorithms.
 <span class='co'># Let's take a look at the returned list</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 6
-#&gt;  $ x_train    :'data.frame':	929 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:929] "Staff was nice." "A bit difficult to understand the staff when they talk to you wearing masks.  Have lost a few items since I been here as well." "There were odd things that I found disturbing" "Nothing" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([1116, 6904, 6642, 8361, 2488, 7989, 1716, 2237, 5699, 3859,
+#&gt;  $ x_train            :'data.frame':	1033 obs. of  1 variable:
+#&gt;   ..$ predictor: chr [1:1033] "Nothing at all" "Happy wIth care from everyone, excellent ward." "Listening to my views such as my concerns. " "All staff very friendly and attentive" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([9645, 3416,  719, 6010, 4083, 4823, 2614, 7071, 3740, 2950,
 #&gt;             ...
-#&gt;             3891, 7769, 2108, 4564, 4055,  682,  647, 4854, 3162, 7381],
-#&gt;            dtype='int64', length=929)
-#&gt;  $ x_test     :'data.frame':	8362 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:8362] "Nothing all good" "Nothing" "No problems, felt looked after" "Rob, amazing mental health practitioner. Very kind, understand." ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([8593, 6048, 5986,  859, 6784, 2277, 1378, 3834, 4280, 9275,
+#&gt;             8338, 5394, 2323, 4506, 1807, 7554, 2924, 9704, 6051, 2360],
+#&gt;            dtype='int64', length=1033)
+#&gt;  $ x_test             :'data.frame':	9301 obs. of  1 variable:
+#&gt;   ..$ predictor: chr [1:9301] "The chosen session has been informative and helped to to raise awareness and understanding of body fat, sugar, "| __truncated__ "A lot of people I know do not have an understandIng about sensory,  I feel It should be known to everyone." "Staff are caring" "Nothing" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([4991, 4226, 7327, 9524, 1517, 4077, 9843, 4065, 5677, 7624,
 #&gt;             ...
-#&gt;             2161, 4236, 4514, 2251, 5990, 2676, 1207, 2797, 3007, 2741],
-#&gt;            dtype='int64', length=8362)
-#&gt;  $ y_train    : Named chr [1:929] "Staff" "Communication" "Care received" "Couldn't be improved" ...
-#&gt;   ..- attr(*, "names")= chr [1:929] "1116" "6904" "6642" "8361" ...
-#&gt;  $ y_test     : Named chr [1:8362] "Couldn't be improved" "Couldn't be improved" "Miscellaneous" "Staff" ...
-#&gt;   ..- attr(*, "names")= chr [1:8362] "8593" "6048" "5986" "859" ...
-#&gt;  $ index_train: int [1:929] 1116 6904 6642 8361 2488 7989 1716 2237 5699 3859 ...
-#&gt;  $ index_test : int [1:8362] 8593 6048 5986 859 6784 2277 1378 3834 4280 9275 ...</div><div class='input'>
+#&gt;             7994, 6155, 7050, 2574, 1683, 9849, 6796, 6552, 4984, 1704],
+#&gt;            dtype='int64', length=9301)
+#&gt;  $ y_train            : chr [1:1033(1d)] "Couldn't be improved" "Care received" "Communication" "Staff" ...
+#&gt;   ..- attr(*, "dimnames")=List of 1
+#&gt;   .. ..$ : chr [1:1033] "9645" "3416" "719" "6010" ...
+#&gt;  $ y_test             : chr [1:9301(1d)] "Communication" "Communication" "Staff" "Couldn't be improved" ...
+#&gt;   ..- attr(*, "dimnames")=List of 1
+#&gt;   .. ..$ : chr [1:9301] "4991" "4226" "7327" "9524" ...
+#&gt;  $ index_training_data: int [1:1033] 9645 3416 719 6010 4083 4823 2614 7071 3740 2950 ...
+#&gt;  $ index_test_data    : int [1:9301] 4991 4226 7327 9524 1517 4077 9843 4065 5677 7624 ...</div><div class='input'>
 <span class='co'># Fit the pipeline</span>
 <span class='va'>pipe</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>factory_pipeline_r</span><span class='op'>(</span>
   x <span class='op'>=</span> <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_train</span>,
@@ -325,7 +327,7 @@ Hyperparameters of Machine Learning Algorithms.
 
 <span class='co'># Mean cross-validated score of the best_estimator</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='va'>best_score_</span>
-</div><div class='output co'>#&gt; [1] 0.4154431</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.4336962</div><div class='input'>
 <span class='co'># Best parameters during tuning</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='va'>best_params_</span>
 </div><div class='output co'>#&gt; $sampling__kw_args
@@ -334,16 +336,16 @@ Hyperparameters of Machine Learning Algorithms.
 #&gt; 
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__use_idf
-#&gt; [1] FALSE
+#&gt; [1] TRUE
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__tokenizer
 #&gt; &lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__preprocessor
-#&gt; &lt;function text_preprocessor at 0x0000000063EB9F70&gt;
+#&gt; &lt;function text_preprocessor at 0x0000000063F69AF0&gt;
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__norm
-#&gt; NULL
+#&gt; [1] "l2"
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__ngram_range
 #&gt; $preprocessor__texttr__text__transformer__ngram_range[[1]]
@@ -360,54 +362,53 @@ Hyperparameters of Machine Learning Algorithms.
 #&gt; [1] 0.95
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer
-#&gt; TfidfVectorizer(max_df=0.95, ngram_range=(3, 3), norm=None,
-#&gt;                 preprocessor=&lt;function text_preprocessor at 0x0000000063EB9F70&gt;,
-#&gt;                 tokenizer=&lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;,
-#&gt;                 use_idf=False)
+#&gt; TfidfVectorizer(max_df=0.95, ngram_range=(3, 3),
+#&gt;                 preprocessor=&lt;function text_preprocessor at 0x0000000063F69AF0&gt;,
+#&gt;                 tokenizer=&lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;)
 #&gt; 
 #&gt; $preprocessor__sentimenttr__scaler__scaler__n_bins
-#&gt; [1] 8
+#&gt; [1] 4
 #&gt; 
 #&gt; $preprocessor__sentimenttr__scaler__scaler
-#&gt; KBinsDiscretizer(n_bins=8, strategy='kmeans')
+#&gt; KBinsDiscretizer(n_bins=4, strategy='kmeans')
 #&gt; 
 #&gt; $preprocessor__lengthtr__scaler__scaler
 #&gt; KBinsDiscretizer(n_bins=3, strategy='kmeans')
 #&gt; 
 #&gt; $featsel__selector__score_func
-#&gt; &lt;function chi2 at 0x0000000063E86C10&gt;
+#&gt; &lt;function chi2 at 0x0000000063F51EE0&gt;
 #&gt; 
 #&gt; $featsel__selector__percentile
-#&gt; [1] 100
+#&gt; [1] 70
 #&gt; 
 #&gt; $featsel__selector
-#&gt; SelectPercentile(percentile=100,
-#&gt;                  score_func=&lt;function chi2 at 0x0000000063E86C10&gt;)
+#&gt; SelectPercentile(percentile=70,
+#&gt;                  score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)
 #&gt; 
 #&gt; $clf__estimator__penalty
-#&gt; [1] "elasticnet"
+#&gt; [1] "l2"
 #&gt; 
 #&gt; $clf__estimator__max_iter
 #&gt; [1] 10000
 #&gt; 
 #&gt; $clf__estimator__loss
-#&gt; [1] "log"
+#&gt; [1] "hinge"
 #&gt; 
 #&gt; $clf__estimator__class_weight
-#&gt; NULL
+#&gt; [1] "balanced"
 #&gt; 
 #&gt; $clf__estimator
-#&gt; SGDClassifier(loss='log', max_iter=10000, penalty='elasticnet')
+#&gt; SGDClassifier(class_weight='balanced', max_iter=10000)
 #&gt; </div><div class='input'>
 <span class='co'># Make predictions</span>
 <span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='va'>pipe</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_test</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Couldn't be improved" "Couldn't be improved" "Care received"       
-#&gt; [4] "Staff"                "Staff"                "Staff"               </div><div class='input'>
+</div><div class='output co'>#&gt; [1] "Care received"        "Couldn't be improved" "Care received"       
+#&gt; [4] "Couldn't be improved" "Care received"        "Couldn't be improved"</div><div class='input'>
 <span class='co'># Performance on test set #</span>
 <span class='co'># Can be done using the pipe's score() method</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='fu'>score</span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_test</span>, <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_test</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.485171</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.4512418</div><div class='input'>
 <span class='co'># Or using dplyr</span>
 <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_test</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -419,7 +420,7 @@ Hyperparameters of Machine Learning Algorithms.
   <span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/pull.html'>pull</a></span><span class='op'>(</span><span class='va'>check</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.485171</div></pre>
+</div><div class='output co'>#&gt; [1] 0.4512418</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

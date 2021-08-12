@@ -19,9 +19,9 @@ otherwise the dataset name (CSV), including full path to the data folder
 (if not in the project's working directory), and the data type suffix
 (".csv").}
 
-\item{target}{A string with the name of the response variable.}
+\item{target}{String. The name of the response variable.}
 
-\item{predictor}{A string with the name of the predictor variable.}
+\item{predictor}{String. The name of the predictor variable.}
 
 \item{test_size}{Numeric. Proportion of data that will form the test dataset.}
 
@@ -32,7 +32,7 @@ criticality. If \code{TRUE}, then all records with a criticality of "-5"
 This is to avoid situations where the pipeline breaks due to a lack of
 sufficient data for "-5" and/or "5". Defaults to \code{FALSE}.}
 
-\item{theme}{A string. For internal use by Nottinghamshire Healthcare NHS
+\item{theme}{String. For internal use by Nottinghamshire Healthcare NHS
 Foundation Trust or other trusts that use theme labels ("Access",
 "Environment/ facilities" etc.). The column name of the theme variable.
 Defaults to \code{NULL}. If supplied, the theme variable will be used as a

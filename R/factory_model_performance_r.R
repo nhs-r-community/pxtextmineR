@@ -2,24 +2,24 @@
 #'
 #' Performance metrics on the test set.
 #'
-#' @param x_train A data frame. Training data (predictor).
-#' @param y_train A vector. Training data (response).
-#' @param x_test A data frame. Test data (predictor).
-#' @param y_test A vector. Test data (response).
-#' @param metric A string. Scorer that was used in pipeline tuning
+#' @param x_train Data frame. Training data (predictor).
+#' @param y_train Vector. Training data (response).
+#' @param x_test Data frame. Test data (predictor).
+#' @param y_test Vector. Test data (response).
+#' @param metric String. Scorer that was used in pipeline tuning
 #'     ("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
 #'     "class_balance_accuracy_score")
 #'
 #' @return A list of length 5:
 #'     \itemize{
 #'         \item{`pipe` The fitted `Scikit-learn`/`imblearn` pipeline.}
-#'         \item{`tuning_results` A data frame with all (hyper)parameter values
+#'         \item{`tuning_results` Data frame. All (hyper)parameter values
 #'             and models tried during fitting.
 #'         }
-#'         \item{`pred` A vector with the predictions on the test
+#'         \item{`pred` Vector. The predictions on the test
 #'             set.
 #'         }
-#'         \item{`accuracy_per_class` A data frame with accuracies per class.}
+#'         \item{`accuracy_per_class` Data frame. Accuracies per class.}
 #'         \item{`p_compare_models_bar` A bar plot comparing the mean scores (of
 #'             the user-supplied `metric` parameter) from the cross-validation
 #'             on the training set, for the best (hyper)parameter values for
@@ -40,12 +40,13 @@
 #'     pipeline performance is assigned to an object called `pipe_performance`.
 #'     Then, `cv_results_` can be accessed with `pipe$cv_results_` or
 #'     `pipe_performance$cv_results_`. \cr\cr
-#'     NOTE: After calculating performance metrics on the test set,
-#'     `pxtextmineR::factory_model_performance_r` fits the pipeline on the whole
-#'     dataset (train + test). Hence, do not be surprised that the pipeline's
-#'     `score()` method will now return a dramatically improved score on the
-#'     test set- it is just a result of overfitting, because the refitted
-#'     pipeline has now "seen" the test dataset. See Examples.
+#'     __NOTE__: After calculating performance metrics on the test set,
+#'     `pxtextmineR::factory_model_performance_r` fits the pipeline on the
+#'     __whole__ dataset (train + test). Hence, do not be surprised that the
+#'     pipeline's `score()` method will now return a dramatically improved score
+#'     on the test set- the refitted pipeline has now "seen" the test dataset
+#'     (see Examples). The re-fitted pipeline will perform much better on fresh
+#'     data than the pipeline fitted on `x_train` and `y_train` only.
 #'
 #' @references
 #' Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
@@ -87,7 +88,8 @@
 #'
 #' names(pipe_performance)
 #'
-#' # Let's compare pipeline performance for different tunings with a range of metrics
+#' # Let's compare pipeline performance for different tunings with a range of
+#' # metrics averaging the cross-validation metrics for each fold.
 #' pipe_performance$
 #'   tuning_results %>%
 #'   dplyr::select(learner, dplyr::contains("mean_test"))
@@ -112,17 +114,16 @@
 #' # NOTE!!! #
 #' ################################################################################
 #' # After calculating performance metrics on the test set,
-#' # pxtextmineR::factory_model_performance_r fits the pipeline on the whole
-#' # dataset (train + test). Hence, do not be surprised that the pipeline's score()
-#' # method will now return a dramatically improved score on the test set- it is
-#' # just a result of overfitting, because the refitted pipeline has now "seen" the
-#' # test dataset.
+#' # pxtextmineR::factory_model_performance_r fits the pipeline on the WHOLE
+#' # dataset (train + test). Hence, do not be surprised that the pipeline's
+#' # score() method will now return a dramatically improved score on the test
+#' # set- the refitted pipeline has now "seen" the test dataset.
 #' pipe_performance$pipe$score(data_splits$x_test, data_splits$y_test)
 #' pipe$score(data_splits$x_test, data_splits$y_test)
 #'
 #' # We can confirm this score by having the re-fitted pipeline predict x_test
-#' # again. The predictions will be better and new accuracy score will be the
-#' # inflated one.
+#' # again. The predictions will be better and the new accuracy score will be
+#' # the inflated one.
 #' preds_refitted <- pipe$predict(data_splits$x_test)
 #'
 #' score_refitted <- data_splits$y_test %>%

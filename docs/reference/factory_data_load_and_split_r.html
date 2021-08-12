@@ -135,11 +135,11 @@ otherwise the dataset name (CSV), including full path to the data folder
     </tr>
     <tr>
       <th>target</th>
-      <td><p>A string with the name of the response variable.</p></td>
+      <td><p>String. The name of the response variable.</p></td>
     </tr>
     <tr>
       <th>predictor</th>
-      <td><p>A string with the name of the predictor variable.</p></td>
+      <td><p>String. The name of the predictor variable.</p></td>
     </tr>
     <tr>
       <th>test_size</th>
@@ -156,7 +156,7 @@ sufficient data for "-5" and/or "5". Defaults to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>theme</th>
-      <td><p>A string. For internal use by Nottinghamshire Healthcare NHS
+      <td><p>String. For internal use by Nottinghamshire Healthcare NHS
 Foundation Trust or other trusts that use theme labels ("Access",
 "Environment/ facilities" etc.). The column name of the theme variable.
 Defaults to <code>NULL</code>. If supplied, the theme variable will be used as a
@@ -176,10 +176,10 @@ human error.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list of length 6: <code>x_train</code> (data frame), <code>x_test</code> (data frame),
-<code>y_train</code> (character vector), <code>y_test</code> (character vector), <code>index_train</code>
-(integer vector), and <code>index_test</code> (integer vector). The row names
+<code>y_train</code> (array), <code>y_test</code> (array), <code>index_training_data</code>
+(integer vector), and <code>index_test_data</code> (integer vector). The row names
 (names) of <code>x_train</code> and <code>x_test</code> (<code>y_train</code> and <code>y_test</code>) are
-<code>index_train</code> and <code>index_test</code> respectively.</p>
+<code>index_training_data</code> and <code>index_test_data</code> respectively.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
@@ -198,28 +198,30 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
 <span class='co'># Let's take a look at the returned list</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 6
-#&gt;  $ x_train    :'data.frame':	6224 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:6224] "Absolutely no problems." "Short notice procedure but dealt with well" "Staff are very nice" "Nice staff" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([6921, 6246, 9038, 1382, 4304, 3491, 2307, 1197, 8520,  176,
+#&gt;  $ x_train            :'data.frame':	6923 obs. of  1 variable:
+#&gt;   ..$ predictor: chr [1:6923] "All of the staff here do a brilliant job caring for everyone and go the extra mile to make sure you’re ok" "Everything" "Some of the other ladies were a bit noisy At night" "Nurses been fantastic" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([5981, 1279, 7296, 7197, 9814, 9215, 9463, 8747, 1451, 7699,
 #&gt;             ...
-#&gt;              670, 2912, 6168, 1545, 1972, 3789, 8155, 8965, 7388, 8106],
-#&gt;            dtype='int64', length=6224)
-#&gt;  $ x_test     :'data.frame':	3067 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:3067] "I feel that this servIce helps my daughter very well" "Nothing" "To stick to the times that was first written. " "No" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([2517, 8238,  361, 7853, 7888, 7147, 7213, 8493,  460, 1024,
+#&gt;             7147, 6060, 7544,  866, 8217, 5144, 7634, 2927,  879, 9989],
+#&gt;            dtype='int64', length=6923)
+#&gt;  $ x_test             :'data.frame':	3411 obs. of  1 variable:
+#&gt;   ..$ predictor: chr [1:3411] "The crisis team could be improved a lot and be far less invalidating and belittling." "Very happy with the service and staff always wear gloves and masks when visit." "Always friendly, very caring.\nClock - tablet time. " "Don't know" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([ 705, 5486, 2346,   62, 2376, 9948, 3246, 2535, 9269, 3924,
 #&gt;             ...
-#&gt;             2378, 1339, 3876, 6353, 4595, 6053, 1308,  937, 2866,   22],
-#&gt;            dtype='int64', length=3067)
-#&gt;  $ y_train    : Named chr [1:6224] "Couldn't be improved" "Communication" "Staff" "Staff" ...
-#&gt;   ..- attr(*, "names")= chr [1:6224] "6921" "6246" "9038" "1382" ...
-#&gt;  $ y_test     : Named chr [1:3067] "Care received" "Couldn't be improved" "Care received" "Couldn't be improved" ...
-#&gt;   ..- attr(*, "names")= chr [1:3067] "2517" "8238" "361" "7853" ...
-#&gt;  $ index_train: int [1:6224] 6921 6246 9038 1382 4304 3491 2307 1197 8520 176 ...
-#&gt;  $ index_test : int [1:3067] 2517 8238 361 7853 7888 7147 7213 8493 460 1024 ...</div><div class='input'>
+#&gt;             8140, 9737, 6422,  724, 4948, 2551, 7306, 8558, 2286, 9476],
+#&gt;            dtype='int64', length=3411)
+#&gt;  $ y_train            : chr [1:6923(1d)] "Staff" "Miscellaneous" "Environment/ facilities" "Staff" ...
+#&gt;   ..- attr(*, "dimnames")=List of 1
+#&gt;   .. ..$ : chr [1:6923] "5981" "1279" "7296" "7197" ...
+#&gt;  $ y_test             : chr [1:3411(1d)] "Staff" "Care received" "Staff" "Couldn't be improved" ...
+#&gt;   ..- attr(*, "dimnames")=List of 1
+#&gt;   .. ..$ : chr [1:3411] "705" "5486" "2346" "62" ...
+#&gt;  $ index_training_data: int [1:6923] 5981 1279 7296 7197 9814 9215 9463 8747 1451 7699 ...
+#&gt;  $ index_test_data    : int [1:3411] 705 5486 2346 62 2376 9948 3246 2535 9269 3924 ...</div><div class='input'>
 <span class='co'># Each record in the split data is tagged with the row index of the original dataset</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "6921" "6246" "9038" "1382" "4304" "3491"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "6921" "6246" "9038" "1382" "4304" "3491"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "5981" "1279" "7296" "7197" "9814" "9215"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "5981" "1279" "7296" "7197" "9814" "9215"</div><div class='input'>
 <span class='co'># Note that, in Python, indices start from 0 and go up to number_of_records - 1</span>
 <span class='va'>all_indices</span> <span class='op'>&lt;-</span> <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -228,7 +230,7 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
   <span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>all_indices</span><span class='op'>)</span> <span class='co'># Starts from zero</span>
 </div><div class='output co'>#&gt; [1] 0 1 2 3 4 5</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>all_indices</span><span class='op'>)</span> <span class='co'># Ends in nrow(text_data) - 1</span>
-</div><div class='output co'>#&gt; [1] 9285 9286 9287 9288 9289 9290</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>all_indices</span><span class='op'>)</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>text_data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 10328 10329 10330 10331 10332 10333</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>all_indices</span><span class='op'>)</span> <span class='op'>==</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>text_data</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

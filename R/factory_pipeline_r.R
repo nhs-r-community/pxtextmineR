@@ -3,14 +3,14 @@
 #' Prepare and fit a text classification pipeline with
 #' [`Scikit-learn`](https://scikit-learn.org/stable/index.html).
 #'
-#' @param x A data frame with the text feature.
-#' @param y A vector with the response variable.
+#' @param x Data frame. The text feature.
+#' @param y Vector. The response variable.
 #' @param tknz Tokenizer to use ("spacy" or "wordnet").
 #' @param ordinal Whether to fit an ordinal classification model. The ordinal
 #'     model is the implementation of [Frank and Hall (2001)](https://www.cs.waikato.ac.nz/~eibe/pubs/ordinal_tech_report.pdf)
 #'     that can use any standard classification model that calculates
 #'     probabilities.
-#' @param metric A string. Scorer to use during pipeline tuning
+#' @param metric String. Scorer to use during pipeline tuning
 #'     ("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
 #'     "class_balance_accuracy_score").
 #' @param cv Number of cross-validation folds.
@@ -20,13 +20,13 @@
 #'     __NOTE:__ If your machine does not have the number of cores specified in
 #'     `n_jobs`, then an error will be returned.
 #' @param verbose Controls the verbosity (see `sklearn.model_selection.RandomizedSearchCV`).
-#' @param learners A vector of `Scikit-learn` names of the learners to tune. Must
+#' @param learners Vector. `Scikit-learn` names of the learners to tune. Must
 #'     be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
 #'     "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
 #'    "MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
 #'    "RandomForestClassifier". When a single model is used, it can be passed as
 #'    a string.
-#' @param theme A string. For internal use by Nottinghamshire Healthcare NHS
+#' @param theme String. For internal use by Nottinghamshire Healthcare NHS
 #'     Foundation Trust or other trusts that use theme labels ("Access",
 #'     "Environment/ facilities" etc.). The column name of the theme variable.
 #'     Defaults to `NULL`. If supplied, the theme variable will be used as a

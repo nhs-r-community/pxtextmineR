@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Whole pipeline — text_classification_pipeline_r • pxtextmineR</title>
+<title>Fit and evaluate the pipeline — text_classification_pipeline_r • pxtextmineR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Whole pipeline — text_classification_pipeline_r" />
-<meta property="og:description" content="Whole pipeline" />
+<meta property="og:title" content="Fit and evaluate the pipeline — text_classification_pipeline_r" />
+<meta property="og:description" content="Split the data, build and fit the pipeline, produce performance metrics." />
 
 
 
@@ -103,13 +103,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Whole pipeline</h1>
+    <h1>Fit and evaluate the pipeline</h1>
     
     <div class="hidden name"><code>text_classification_pipeline_r.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Whole pipeline</p>
+    <p>Split the data, build and fit the pipeline, produce performance metrics.</p>
     </div>
 
     <pre class="usage"><span class='fu'>text_classification_pipeline_r</span><span class='op'>(</span>
@@ -120,41 +120,385 @@
   ordinal <span class='op'>=</span> <span class='cn'>FALSE</span>,
   tknz <span class='op'>=</span> <span class='st'>"spacy"</span>,
   metric <span class='op'>=</span> <span class='st'>"class_balance_accuracy_score"</span>,
-  cv <span class='op'>=</span> <span class='fl'>5</span>,
-  n_iter <span class='op'>=</span> <span class='fl'>100</span>,
-  n_jobs <span class='op'>=</span> <span class='fl'>5</span>,
+  cv <span class='op'>=</span> <span class='fl'>2</span>,
+  n_iter <span class='op'>=</span> <span class='fl'>10</span>,
+  n_jobs <span class='op'>=</span> <span class='fl'>1</span>,
   verbose <span class='op'>=</span> <span class='fl'>3</span>,
   learners <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SGDClassifier"</span><span class='op'>)</span>,
-  objects_to_save <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pipeline"</span>, <span class='st'>"tuning results"</span>, <span class='st'>"predictions"</span>,
-    <span class='st'>"accuracy per class"</span>, <span class='st'>"index - training data"</span>, <span class='st'>"index - test data"</span>, <span class='st'>"bar plot"</span><span class='op'>)</span>,
-  save_objects_to_server <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  save_objects_to_disk <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  save_pipeline_as <span class='op'>=</span> <span class='st'>"default"</span>,
-  results_folder_name <span class='op'>=</span> <span class='st'>"results"</span>,
   reduce_criticality <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  theme <span class='op'>=</span> <span class='cn'>NULL</span>,
-  python_setup <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  <span class='va'>sys_setenv</span>,
-  <span class='va'>which_python</span>,
-  <span class='va'>which_venv</span>,
-  <span class='va'>venv_name</span>
+  theme <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>venv_name</th>
-      <td></td>
+      <th>filename</th>
+      <td><p>A data frame with the data (class and text columns),
+otherwise the dataset name (CSV), including full path to the data folder
+(if not in the project's working directory), and the data type suffix
+(".csv").</p></td>
+    </tr>
+    <tr>
+      <th>target</th>
+      <td><p>String. The name of the response variable.</p></td>
+    </tr>
+    <tr>
+      <th>predictor</th>
+      <td><p>String. The name of the predictor variable.</p></td>
+    </tr>
+    <tr>
+      <th>test_size</th>
+      <td><p>Numeric. Proportion of data that will form the test dataset.</p></td>
+    </tr>
+    <tr>
+      <th>ordinal</th>
+      <td><p>Whether to fit an ordinal classification model. The ordinal
+model is the implementation of <a href='https://www.cs.waikato.ac.nz/~eibe/pubs/ordinal_tech_report.pdf'>Frank and Hall (2001)</a>
+that can use any standard classification model that calculates
+probabilities.</p></td>
+    </tr>
+    <tr>
+      <th>tknz</th>
+      <td><p>Tokenizer to use ("spacy" or "wordnet").</p></td>
+    </tr>
+    <tr>
+      <th>metric</th>
+      <td><p>String. Scorer to use during pipeline tuning
+("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
+"class_balance_accuracy_score").</p></td>
+    </tr>
+    <tr>
+      <th>cv</th>
+      <td><p>Number of cross-validation folds.</p></td>
+    </tr>
+    <tr>
+      <th>n_iter</th>
+      <td><p>Number of parameter settings that are sampled (see
+<a href='https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html'><code>sklearn.model_selection.RandomizedSearchCV</code></a>).</p></td>
+    </tr>
+    <tr>
+      <th>n_jobs</th>
+      <td><p>Number of jobs to run in parallel (see <code>sklearn.model_selection.RandomizedSearchCV</code>).
+<strong>NOTE:</strong> If your machine does not have the number of cores specified in
+<code>n_jobs</code>, then an error will be returned.</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Controls the verbosity (see <code>sklearn.model_selection.RandomizedSearchCV</code>).</p></td>
+    </tr>
+    <tr>
+      <th>learners</th>
+      <td><p>Vector. <code>Scikit-learn</code> names of the learners to tune. Must
+be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
+"PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
+"MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
+"RandomForestClassifier". When a single model is used, it can be passed as
+a string.</p></td>
+    </tr>
+    <tr>
+      <th>reduce_criticality</th>
+      <td><p>Logical. For internal use by Nottinghamshire
+Healthcare NHS Foundation Trust or other trusts that hold data on
+criticality. If <code>TRUE</code>, then all records with a criticality of "-5"
+(respectively, "5") are assigned a criticality of "-4" (respectively, "4").
+This is to avoid situations where the pipeline breaks due to a lack of
+sufficient data for "-5" and/or "5". Defaults to <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>theme</th>
+      <td><p>String. For internal use by Nottinghamshire Healthcare NHS
+Foundation Trust or other trusts that use theme labels ("Access",
+"Environment/ facilities" etc.). The column name of the theme variable.
+Defaults to <code>NULL</code>. If supplied, the theme variable will be used as a
+predictor (along with the text predictor) in the model that is fitted
+with criticality as the response variable. The rationale is two-fold.
+First, to help the model improve predictions on criticality when the
+theme labels are readily available. Second, to force the criticality for
+"Couldn't be improved" to always be "3" in the training and test data, as
+well as in the predictions. This is the only criticality value that
+"Couldn't be improved" can take, so by forcing it to always be "3", we
+are improving model performance, but are also correcting possible
+erroneous assignments of values other than "3" that are attributed to
+human error.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
+    <p>A list of length 7:</p><ul>
+<li><p>A fitted <code>Scikit-learn</code> pipeline containing a number of objects
+that can be accessed with the <code><a href='https://rdrr.io/r/base/Extract.html'>$</a></code> sign (see examples). For a
+partial list see "Atributes" in
+<a href='https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html'><code>sklearn.model_selection.RandomizedSearchCV</code></a>.
+Do not be surprised if more objects are in the pipeline than
+those in the aforementioned "Attributes" list. Python objects can
+contain several objects, from numeric results (e.g. the
+pipeline's accuracy), to <em>methods</em> (i.e. functions in the R
+lingo) and <em>classes</em>. In Python, these are normally accessed with
+<code>object.&lt;whatever&gt;</code>, but in R the command is <code>object$&lt;whatever&gt;</code>.
+For instance, one can access method <code><a href='https://rdrr.io/r/stats/predict.html'>predict()</a></code> to make  to make
+predictions on unseen data. See Examples.</p></li>
+<li><p><code>tuning_results</code> Data frame. All (hyper)parameter values
+and models tried during fitting.</p></li>
+<li><p><code>pred</code> Vector. The predictions on the test set.</p></li>
+<li><p><code>accuracy_per_class</code> Data frame. Accuracies per class.</p></li>
+<li><p><code>p_compare_models_bar</code> A bar plot comparing the mean scores (of
+the user-supplied <code>metric</code> parameter) from the cross-validation
+on the training set, for the best (hyper)parameter values for
+each learner.</p></li>
+<li><p><code>index_training_data</code> The row names/indices of the training
+data. Note that, in Python, indices start from 0 and go up to
+number_of_records - 1. See Examples.</p></li>
+<li><p><code>index_test_data</code> The row names/indices of the test data. Note
+that, in Python, indices start from 0 and go up to
+number_of_records - 1. See Examples.</p></li>
+</ul>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>This function brings together the three functions that run chunks of
+the process independently, namely splitting data into training and test
+sets (<code><a href='factory_data_load_and_split_r.html'>factory_data_load_and_split_r</a></code>), building and fitting
+the pipeline (<code><a href='factory_pipeline_r.html'>factory_pipeline_r</a></code>) on the <strong>whole</strong> dataset
+(train and test), and assessing pipeline performance
+(<code><a href='factory_model_performance_r.html'>factory_model_performance_r</a></code>).</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>Frank E. &amp; Hall M. (2001). A Simple Approach to Ordinal Classification.
+<em>Machine Learning: ECML 2001</em> 145--156.</p>
+<p>Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
+Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A.,
+Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
+<a href='https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html'>Scikit-learn: Machine Learning in Python</a>.
+<em>Journal of Machine Learning Research</em> 12:2825–-2830.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># We can prepare the data, build and fit the pipeline, and get performance</span>
+<span class='co'># metrics, in two ways. One way is to run the factory_* functions independently</span>
+<span class='co'># The commented out script right below would do exactly that.</span>
+
+<span class='co'># Prepare training and test sets</span>
+<span class='co'># data_splits &lt;- pxtextmineR::factory_data_load_and_split_r(</span>
+<span class='co'>#   filename = pxtextmineR::text_data,</span>
+<span class='co'>#   target = "label",</span>
+<span class='co'>#   predictor = "feedback",</span>
+<span class='co'>#   test_size = 0.90) # Make a small training set for a faster run in this example</span>
+<span class='co'>#</span>
+<span class='co'># # Fit the pipeline</span>
+<span class='co'># pipe &lt;- pxtextmineR::factory_pipeline_r(</span>
+<span class='co'>#   x = data_splits$x_train,</span>
+<span class='co'>#   y = data_splits$y_train,</span>
+<span class='co'>#   tknz = "spacy",</span>
+<span class='co'>#   ordinal = FALSE,</span>
+<span class='co'>#   metric = "accuracy_score",</span>
+<span class='co'>#   cv = 2, n_iter = 1, n_jobs = 1, verbose = 3,</span>
+<span class='co'>#   learners = c("SGDClassifier", "MultinomialNB")</span>
+<span class='co'># )</span>
+<span class='co'>#</span>
+<span class='co'># # Assess model performance</span>
+<span class='co'># pipe_performance &lt;- pxtextmineR::factory_model_performance_r(</span>
+<span class='co'>#   pipe = pipe,</span>
+<span class='co'>#   x_train = data_splits$x_train,</span>
+<span class='co'>#   y_train = data_splits$y_train,</span>
+<span class='co'>#   x_test = data_splits$x_test,</span>
+<span class='co'>#   y_test = data_splits$y_test,</span>
+<span class='co'>#   metric = "accuracy_score")</span>
+
+<span class='co'># Alternatively, we can use text_classification_pipeline_r() to do everything in</span>
+<span class='co'># one go.</span>
+<span class='va'>text_pipe</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>text_classification_pipeline_r</span><span class='op'>(</span>
+  filename <span class='op'>=</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span>,
+  target <span class='op'>=</span> <span class='st'>'label'</span>,
+  predictor <span class='op'>=</span> <span class='st'>'feedback'</span>,
+  test_size <span class='op'>=</span> <span class='fl'>0.33</span>,
+  ordinal <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  tknz <span class='op'>=</span> <span class='st'>"spacy"</span>,
+  metric <span class='op'>=</span> <span class='st'>"class_balance_accuracy_score"</span>,
+  cv <span class='op'>=</span> <span class='fl'>2</span>, n_iter <span class='op'>=</span> <span class='fl'>10</span>, n_jobs <span class='op'>=</span> <span class='fl'>1</span>, verbose <span class='op'>=</span> <span class='fl'>3</span>,
+  learners <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SGDClassifier"</span>, <span class='st'>"MultinomialNB"</span><span class='op'>)</span>,
+  reduce_criticality <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  theme <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "pipe"                 "tuning_results"       "pred"                
+#&gt; [4] "accuracy_per_class"   "p_compare_models_bar" "index_training_data" 
+#&gt; [7] "index_test_data"     </div><div class='input'>
+<span class='co'># Let's compare pipeline performance for different tunings with a range of</span>
+<span class='co'># metrics averaging the cross-validation metrics for each fold.</span>
+<span class='va'>text_pipe</span><span class='op'>$</span>
+  <span class='va'>tuning_results</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>learner</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>contains</a></span><span class='op'>(</span><span class='st'>"mean_test"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         learner mean_test_Accuracy mean_test_Balanced Accuracy
+#&gt; 0 SGDClassifier          0.6790415                   0.4720629
+#&gt; 8 SGDClassifier          0.6719625                   0.4527744
+#&gt; 2 SGDClassifier          0.6374395                   0.4758325
+#&gt; 3 SGDClassifier          0.5835633                   0.4033896
+#&gt; 7 SGDClassifier          0.5936745                   0.3838040
+#&gt; 6 MultinomialNB          0.6149074                   0.3803596
+#&gt; 4 SGDClassifier          0.5657946                   0.3470423
+#&gt; 5 SGDClassifier          0.4893845                   0.3079516
+#&gt; 1 SGDClassifier          0.5201491                   0.2946684
+#&gt; 9 MultinomialNB          0.5176947                   0.2790157
+#&gt;   mean_test_Matthews Correlation Coefficient mean_test_Class Balance Accuracy
+#&gt; 0                                  0.5804486                        0.4524982
+#&gt; 8                                  0.5683848                        0.4325695
+#&gt; 2                                  0.5319608                        0.4210076
+#&gt; 3                                  0.4606345                        0.3632832
+#&gt; 7                                  0.4680378                        0.3490020
+#&gt; 6                                  0.4903623                        0.3437986
+#&gt; 4                                  0.4298463                        0.3088490
+#&gt; 5                                  0.3429014                        0.2589611
+#&gt; 1                                  0.3640649                        0.2485893
+#&gt; 9                                  0.3600822                        0.2282714</div><div class='input'>
+<span class='co'># A glance at the (hyper)parameters and their tuned values</span>
+<span class='va'>text_pipe</span><span class='op'>$</span>
+  <span class='va'>tuning_results</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>learner</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>contains</a></span><span class='op'>(</span><span class='st'>"param_"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 'data.frame':	10 obs. of  22 variables:
+#&gt;  $ learner                                                    : chr  "SGDClassifier" "SGDClassifier" "SGDClassifier" "SGDClassifier" ...
+#&gt;  $ param_sampling__kw_args                                    : chr  "{'up_balancing_counts': 300}" "{'up_balancing_counts': 300}" "{'up_balancing_counts': 800}" "{'up_balancing_counts': 800}" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__use_idf     :List of 10
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi TRUE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi TRUE
+#&gt;   ..$ : logi FALSE
+#&gt;  $ param_preprocessor__texttr__text__transformer__tokenizer   : chr  "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__preprocessor: chr  "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__norm        : chr  "None" "None" "l2" "l2" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__ngram_range : chr  "(1, 3)" "(1, 3)" "(1, 3)" "(2, 3)" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__min_df      :List of 10
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 1
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 1
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 3
+#&gt;   ..$ : int 1
+#&gt;   ..$ : int 1
+#&gt;  $ param_preprocessor__texttr__text__transformer__max_df      :List of 10
+#&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.95
+#&gt;   ..$ : num 0.95
+#&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.95
+#&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.95
+#&gt;   ..$ : num 0.95
+#&gt;   ..$ : num 0.7
+#&gt;  $ param_preprocessor__texttr__text__transformer              : chr  "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ ...
+#&gt;  $ param_preprocessor__sentimenttr__scaler__scaler__n_bins    :List of 10
+#&gt;   ..$ : int 8
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 8
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 8
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 8
+#&gt;   ..$ : int 8
+#&gt;  $ param_preprocessor__sentimenttr__scaler__scaler            : chr  "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" ...
+#&gt;  $ param_preprocessor__lengthtr__scaler__scaler               : chr  "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" ...
+#&gt;  $ param_featsel__selector__score_func                        : chr  "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" ...
+#&gt;  $ param_featsel__selector__percentile                        :List of 10
+#&gt;   ..$ : int 85
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 85
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 100
+#&gt;   ..$ : int 100
+#&gt;   ..$ : int 85
+#&gt;   ..$ : int 100
+#&gt;   ..$ : int 85
+#&gt;   ..$ : int 85
+#&gt;  $ param_featsel__selector                                    : chr  "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" ...
+#&gt;  $ param_clf__estimator__penalty                              :List of 10
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "elasticnet"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : chr "elasticnet"
+#&gt;   ..$ : chr "elasticnet"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : num NaN
+#&gt;  $ param_clf__estimator__max_iter                             :List of 10
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : num NaN
+#&gt;  $ param_clf__estimator__loss                                 :List of 10
+#&gt;   ..$ : chr "log"
+#&gt;   ..$ : chr "log"
+#&gt;   ..$ : chr "log"
+#&gt;   ..$ : chr "hinge"
+#&gt;   ..$ : chr "hinge"
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : chr "hinge"
+#&gt;   ..$ : chr "log"
+#&gt;   ..$ : chr "log"
+#&gt;   ..$ : num NaN
+#&gt;  $ param_clf__estimator__class_weight                         : chr  "None" "None" "None" "None" ...
+#&gt;  $ param_clf__estimator                                       : chr  "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" ...
+#&gt;  $ param_clf__estimator__alpha                                :List of 10
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : int 1
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num NaN
+#&gt;   ..$ : num 0.1
+#&gt;  - attr(*, "pandas.index")=Int64Index([0, 8, 2, 3, 7, 6, 4, 5, 1, 9], dtype='int64')</div><div class='input'>
+<span class='co'># Learner performance barplot</span>
+<span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>p_compare_models_bar</span>
+</div><div class='img'><img src='text_classification_pipeline_r-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Predictions on test set</span>
+<span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>pred</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Staff"                "Couldn't be improved" "Staff"               
+#&gt; [4] "Staff"                "Couldn't be improved" "Couldn't be improved"</div><div class='input'>
+<span class='co'># We can also get the row indices of the train and test data. Note that, in</span>
+<span class='co'># Python, indices start from 0. For example, the row indices of a data frame</span>
+<span class='co'># with 5 rows would be 0, 1, 2, 3 &amp; 4.</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_training_data</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]  1  2  4  7  9 10</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_test_data</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]  0  3  5  6  8 13</div><div class='input'>
+<span class='co'># Let's subset the original data set</span>
+<span class='va'>text_dataset</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>text_dataset</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>0</span><span class='op'>:</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>text_dataset</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>data_train</span> <span class='op'>&lt;-</span> <span class='va'>text_dataset</span><span class='op'>[</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_training_data</span>, <span class='op'>]</span>
+<span class='va'>data_test</span> <span class='op'>&lt;-</span> <span class='va'>text_dataset</span><span class='op'>[</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_test_data</span>, <span class='op'>]</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_train</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 'data.frame':	6923 obs. of  3 variables:
+#&gt;  $ label      : chr  "Staff" "Staff" "Care received" "Care received" ...
+#&gt;  $ criticality: chr  "0" "0" "0" "4" ...
+#&gt;  $ feedback   : chr  "It was my first visit to your clinic and I must say the nurse was very professional and very helpful and supportive." "I found XXXX very polite.  After asking lots of questions he diagnosed my problem" "Really helpful to see all of the team at once and reassuring to know what we are doing is the right.  Beneficia"| __truncated__ "After strugglIng on my own for a few months I found the abIlIty to talk to someone who, could and would try to "| __truncated__ ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_test</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 'data.frame':	3410 obs. of  3 variables:
+#&gt;  $ label      : chr  "Couldn't be improved" "Access" "Staff" "Staff" ...
+#&gt;  $ criticality: chr  "3" "-2" "-2" "4" ...
+#&gt;  $ feedback   : chr  "Everyone has been great" "More time. " "The nurse who did my first apt was okay, but appeared to not believe everything I said." "Very friendly, excellent care." ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

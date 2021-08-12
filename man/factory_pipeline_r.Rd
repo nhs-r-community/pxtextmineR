@@ -21,9 +21,9 @@ factory_pipeline_r(
 )
 }
 \arguments{
-\item{x}{A data frame with the text feature.}
+\item{x}{Data frame. The text feature.}
 
-\item{y}{A vector with the response variable.}
+\item{y}{Vector. The response variable.}
 
 \item{tknz}{Tokenizer to use ("spacy" or "wordnet").}
 
@@ -32,7 +32,7 @@ model is the implementation of \href{https://www.cs.waikato.ac.nz/~eibe/pubs/ord
 that can use any standard classification model that calculates
 probabilities.}
 
-\item{metric}{A string. Scorer to use during pipeline tuning
+\item{metric}{String. Scorer to use during pipeline tuning
 ("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
 "class_balance_accuracy_score").}
 
@@ -47,14 +47,14 @@ probabilities.}
 
 \item{verbose}{Controls the verbosity (see \code{sklearn.model_selection.RandomizedSearchCV}).}
 
-\item{learners}{A vector of \code{Scikit-learn} names of the learners to tune. Must
+\item{learners}{Vector. \code{Scikit-learn} names of the learners to tune. Must
 be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
 "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
 "MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
 "RandomForestClassifier". When a single model is used, it can be passed as
 a string.}
 
-\item{theme}{A string. For internal use by Nottinghamshire Healthcare NHS
+\item{theme}{String. For internal use by Nottinghamshire Healthcare NHS
 Foundation Trust or other trusts that use theme labels ("Access",
 "Environment/ facilities" etc.). The column name of the theme variable.
 Defaults to \code{NULL}. If supplied, the theme variable will be used as a
