@@ -10,12 +10,7 @@ factory_data_load_and_split_r(
   predictor,
   test_size = 0.33,
   reduce_criticality = FALSE,
-  theme = NULL,
-  python_setup = FALSE,
-  sys_setenv = NULL,
-  which_python = NULL,
-  which_venv = NULL,
-  venv_name = NULL
+  theme = NULL
 )
 }
 \arguments{
@@ -51,50 +46,21 @@ well as in the predictions. This is the only criticality value that
 are improving model performance, but are also correcting possible
 erroneous assignments of values other than "3" that are attributed to
 human error.}
-
-\item{python_setup}{A \code{logical} whether to set up the \code{Python} version,
-virtual environment etc. that can be controlled with arguments
-\code{sys_setenv}, \code{which_python}, \code{which_venv} and \code{venv_name}. These
-arguments will be ignored when \code{python_setup} is \code{FALSE}. The purpose of
-\code{python_setup} is that users may wish to control the \code{Python} parameters
-outside the actual function, for the session in general.}
-
-\item{sys_setenv}{A string in the form "path_to_python/python.exe",
-indicating which Python to use (e.g. from a virtual environment).}
-
-\item{which_python}{Same as \code{sys_setenv}.}
-
-\item{which_venv}{A string that can be "conda", "miniconda" or "python".}
-
-\item{venv_name}{String. The name of the virtual environment.}
-
-\item{text_col_name}{A string with the column name of the text variable.}
 }
 \value{
 A list of length 6: \code{x_train} (data frame), \code{x_test} (data frame),
-\code{y_train} (character vector), \code{y_test} (character vector), \code{index_train}
-(integer vector), and \code{index_test} (integer vector). The row names
+\code{y_train} (array), \code{y_test} (array), \code{index_training_data}
+(integer vector), and \code{index_test_data} (integer vector). The row names
 (names) of \code{x_train} and \code{x_test} (\code{y_train} and \code{y_test}) are
-\code{index_train} and \code{index_test} respectively.
+\code{index_training_data} and \code{index_test_data} respectively.
 }
 \description{
 Splits the dataset with \href{https://scikit-learn.org/stable/index.html}{\code{Scikit-learn}}
 and returns the train/test data and their row/position indices.
 }
 \examples{
-# One can set the python.exe and virtual environment directly in the pxtextmineR
-# functions or globally, with experienceAnalysis
-# (https://github.com/CDU-data-science-team/experienceAnalysis).
-
-experienceAnalysis::prep_python(
-  sys_setenv = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-  which_python = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-  which_venv = "conda",
-  venv_name = "pxtextmining_venv"
-)
-
 data_splits <- pxtextmineR::factory_data_load_and_split_r(
-  filename = text_data,
+  filename = pxtextmineR::text_data,
   target = "label",
   predictor = "feedback",
   test_size = 0.33)

@@ -73,11 +73,47 @@
 <!-- badges: start -->
 
 <p>An R wrapper for Python’s <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> library- a pipeline to classify text-based patient experience data.</p>
+<p><strong>Function documentation</strong>: <a href="https://nhs-r-community.github.io/pxtextmineR/" class="uri">https://nhs-r-community.github.io/pxtextmineR/</a>.</p>
 <p>Package <code>pxtextmineR</code> does not wrap <em>everything</em> from <code>pxtextmining</code>, but selected functions that will offer R users new opportunities for modelling. For example, the whole <a href="https://scikit-learn.org/stable/index.html"><code>Scikit-learn</code></a> (Pedregosa et al., 2011) text classification pipeline is wrapped, as well as helper functions for e.g. sentiment analysis with Python’s <a href="https://textblob.readthedocs.io/en/dev/"><code>textBlob</code></a> and <a href="https://pypi.org/project/vaderSentiment/"><code>vaderSentiment</code></a>.</p>
-<div id="installation" class="section level2">
+<p>How does wrapper work? It uses R package <a href="https://rstudio.github.io/reticulate/"><code>reticulate</code></a>, which provides tools for interoperability between Python and R.</p>
+<div id="installation-and-setup" class="section level2">
 <h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>devtools::install_github(“nhs-r-community/pxtextmineR”)</p>
+<a href="#installation-and-setup" class="anchor"></a>Installation and setup</h2>
+<p>There are a few things that need to be done to install and set up <code>pxtextmineR</code>.</p>
+<ol>
+<li><p>Run <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")</a></code> in the R console.</p></li>
+<li>
+<p>Create a Python <em>virtual environment</em>. If not familiar with virtual environments please take a look at <a href="https://docs.python.org/3/tutorial/venv.html">this</a> and <a href="https://virtualenv.pypa.io/en/stable/">this</a>. R package <code>reticulate</code> has functions to create a Python virtual environment via the R console. Refer to <code><a href="https://rdrr.io/pkg/reticulate/man/conda-tools.html">reticulate::conda_create</a></code> and <code><a href="https://rdrr.io/pkg/reticulate/man/virtualenv-tools.html">reticulate::virtualenv_create</a></code>. For example, if using <a href="https://docs.conda.io/en/latest/index.html#">Conda</a>, run</p>
+<p><code><a href="https://rdrr.io/pkg/reticulate/man/conda-tools.html">reticulate::conda_create("r-reticulate")</a></code></p>
+<p>where “r-reticulate” is the name of <code>reticulate</code>‘s default virtual environment. Using this default virtual environment for <code>pxtextmineR</code> is strongly recommended because it makes the setup so much easier. According to the <code>reticulate</code> authors’ <a href="https://rstudio.github.io/reticulate/articles/package.html">own words</a> “<em>[i]t’s much more straightforward for users if there is a common environment used by R packages […]</em>”</p>
+</li>
+<li>
+<p>Tell <code>reticulate</code> to use the “r-reticulate” virtual environment:</p>
+<p><code>reticulate::use_condaenv("r-reticulate"", required = TRUE)</code></p>
+</li>
+<li>
+<p>Install Python package <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> in “r-reticulate”:</p>
+<p><code><a href="https://rdrr.io/pkg/reticulate/man/py_install.html">reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)</a></code></p>
+</li>
+<li>
+<p>We also need to install a couple of <a href="https://github.com/explosion/spacy-models"><code>spaCy</code></a> models in “r-reticulate”. These are obtained from URL links and thus need to be installed separately. In the R console run:</p>
+<pre><code><a href="https://rdrr.io/r/base/system.html">system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
+
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")</a></code></pre>
+</li>
+</ol>
+<p>All steps in one go:</p>
+<pre><code>devtools::install_github("nhs-r-community/pxtextmineR")
+# If not using Conda, comment out the next two lines and uncomment the two lines 
+# following them.
+reticulate::conda_create("r-reticulate")
+reticulate::use_condaenv("r-reticulate"", required = TRUE)
+# reticulate::virtualenv_create("r-reticulate")
+# reticulate::use_virtualenv("r-reticulate"", required = TRUE)
+reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
+</code></pre>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">

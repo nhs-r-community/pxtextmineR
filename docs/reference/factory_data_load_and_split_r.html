@@ -120,12 +120,7 @@ and returns the train/test data and their row/position indices.</p>
   <span class='va'>predictor</span>,
   test_size <span class='op'>=</span> <span class='fl'>0.33</span>,
   reduce_criticality <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  theme <span class='op'>=</span> <span class='cn'>NULL</span>,
-  python_setup <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  sys_setenv <span class='op'>=</span> <span class='cn'>NULL</span>,
-  which_python <span class='op'>=</span> <span class='cn'>NULL</span>,
-  which_venv <span class='op'>=</span> <span class='cn'>NULL</span>,
-  venv_name <span class='op'>=</span> <span class='cn'>NULL</span>
+  theme <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -176,36 +171,6 @@ are improving model performance, but are also correcting possible
 erroneous assignments of values other than "3" that are attributed to
 human error.</p></td>
     </tr>
-    <tr>
-      <th>python_setup</th>
-      <td><p>A <code>logical</code> whether to set up the <code>Python</code> version,
-virtual environment etc. that can be controlled with arguments
-<code>sys_setenv</code>, <code>which_python</code>, <code>which_venv</code> and <code>venv_name</code>. These
-arguments will be ignored when <code>python_setup</code> is <code>FALSE</code>. The purpose of
-<code>python_setup</code> is that users may wish to control the <code>Python</code> parameters
-outside the actual function, for the session in general.</p></td>
-    </tr>
-    <tr>
-      <th>sys_setenv</th>
-      <td><p>A string in the form "path_to_python/python.exe",
-indicating which Python to use (e.g. from a virtual environment).</p></td>
-    </tr>
-    <tr>
-      <th>which_python</th>
-      <td><p>Same as <code>sys_setenv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>which_venv</th>
-      <td><p>A string that can be "conda", "miniconda" or "python".</p></td>
-    </tr>
-    <tr>
-      <th>venv_name</th>
-      <td><p>String. The name of the virtual environment.</p></td>
-    </tr>
-    <tr>
-      <th>text_col_name</th>
-      <td><p>A string with the column name of the text variable.</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -224,19 +189,8 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
 <em>Journal of Machine Learning Research</em> 12:2825--2830</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># One can set the python.exe and virtual environment directly in the pxtextmineR</span>
-<span class='co'># functions or globally, with experienceAnalysis</span>
-<span class='co'># (https://github.com/CDU-data-science-team/experienceAnalysis).</span>
-
-<span class='fu'>experienceAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/experienceAnalysis/man/prep_python.html'>prep_python</a></span><span class='op'>(</span>
-  sys_setenv <span class='op'>=</span> <span class='st'>"C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe"</span>,
-  which_python <span class='op'>=</span> <span class='st'>"C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe"</span>,
-  which_venv <span class='op'>=</span> <span class='st'>"conda"</span>,
-  venv_name <span class='op'>=</span> <span class='st'>"pxtextmining_venv"</span>
-<span class='op'>)</span>
-
-<span class='va'>data_splits</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>factory_data_load_and_split_r</span><span class='op'>(</span>
-  filename <span class='op'>=</span> <span class='va'>text_data</span>,
+    <pre class="examples"><div class='input'><span class='va'>data_splits</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>factory_data_load_and_split_r</span><span class='op'>(</span>
+  filename <span class='op'>=</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span>,
   target <span class='op'>=</span> <span class='st'>"label"</span>,
   predictor <span class='op'>=</span> <span class='st'>"feedback"</span>,
   test_size <span class='op'>=</span> <span class='fl'>0.33</span><span class='op'>)</span>
@@ -245,27 +199,27 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 6
 #&gt;  $ x_train    :'data.frame':	6224 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:6224] "Nothing, because you saved my life." "Everything was good" "Staff are really good &amp; good to talk to" "Everything is good but * hand very well , I think she is the best." ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([8820, 5390,  959, 5364, 3414, 8387, 2337, 8169, 6172, 4516,
+#&gt;   ..$ predictor: chr [1:6224] "Absolutely no problems." "Short notice procedure but dealt with well" "Staff are very nice" "Nice staff" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([6921, 6246, 9038, 1382, 4304, 3491, 2307, 1197, 8520,  176,
 #&gt;             ...
-#&gt;             3055, 6415, 4616, 5447, 7853, 5189, 4042, 3697, 4419, 5497],
+#&gt;              670, 2912, 6168, 1545, 1972, 3789, 8155, 8965, 7388, 8106],
 #&gt;            dtype='int64', length=6224)
 #&gt;  $ x_test     :'data.frame':	3067 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:3067] "Excellent" "Help keep a healthy mind &amp; body." "Everything was good, very quick access, staff were very supportive, and put me at ease throughout." "They are very caring,kind,helpful and amazing team" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([5401, 1274, 1421, 6645, 2875, 1180, 5087, 5581,  274, 1166,
+#&gt;   ..$ predictor: chr [1:3067] "I feel that this servIce helps my daughter very well" "Nothing" "To stick to the times that was first written. " "No" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([2517, 8238,  361, 7853, 7888, 7147, 7213, 8493,  460, 1024,
 #&gt;             ...
-#&gt;             8813, 7696, 2952, 1153, 5337, 5535, 5126, 9054, 7049,  754],
+#&gt;             2378, 1339, 3876, 6353, 4595, 6053, 1308,  937, 2866,   22],
 #&gt;            dtype='int64', length=3067)
-#&gt;  $ y_train    : Named chr [1:6224] "Care received" "Miscellaneous" "Staff" "Miscellaneous" ...
-#&gt;   ..- attr(*, "names")= chr [1:6224] "8820" "5390" "959" "5364" ...
-#&gt;  $ y_test     : Named chr [1:3067] "Care received" "Care received" "Access" "Staff" ...
-#&gt;   ..- attr(*, "names")= chr [1:3067] "5401" "1274" "1421" "6645" ...
-#&gt;  $ index_train: int [1:6224] 8820 5390 959 5364 3414 8387 2337 8169 6172 4516 ...
-#&gt;  $ index_test : int [1:3067] 5401 1274 1421 6645 2875 1180 5087 5581 274 1166 ...</div><div class='input'>
+#&gt;  $ y_train    : Named chr [1:6224] "Couldn't be improved" "Communication" "Staff" "Staff" ...
+#&gt;   ..- attr(*, "names")= chr [1:6224] "6921" "6246" "9038" "1382" ...
+#&gt;  $ y_test     : Named chr [1:3067] "Care received" "Couldn't be improved" "Care received" "Couldn't be improved" ...
+#&gt;   ..- attr(*, "names")= chr [1:3067] "2517" "8238" "361" "7853" ...
+#&gt;  $ index_train: int [1:6224] 6921 6246 9038 1382 4304 3491 2307 1197 8520 176 ...
+#&gt;  $ index_test : int [1:3067] 2517 8238 361 7853 7888 7147 7213 8493 460 1024 ...</div><div class='input'>
 <span class='co'># Each record in the split data is tagged with the row index of the original dataset</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "8820" "5390" "959"  "5364" "3414" "8387"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "8820" "5390" "959"  "5364" "3414" "8387"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "6921" "6246" "9038" "1382" "4304" "3491"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "6921" "6246" "9038" "1382" "4304" "3491"</div><div class='input'>
 <span class='co'># Note that, in Python, indices start from 0 and go up to number_of_records - 1</span>
 <span class='va'>all_indices</span> <span class='op'>&lt;-</span> <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>

@@ -3,7 +3,7 @@
 \docType{data}
 \name{text_data}
 \alias{text_data}
-\title{Patient experience data.}
+\title{Patient experience data}
 \format{
 A data frame with 3 variables:
 \describe{

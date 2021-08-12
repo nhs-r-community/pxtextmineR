@@ -17,12 +17,7 @@ factory_pipeline_r(
   learners = c("SGDClassifier", "RidgeClassifier", "Perceptron",
     "PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB", "MultinomialNB",
     "RandomForestClassifier"),
-  theme = NULL,
-  python_setup = FALSE,
-  sys_setenv = NULL,
-  which_python = NULL,
-  which_venv = NULL,
-  venv_name = NULL
+  theme = NULL
 )
 }
 \arguments{
@@ -59,8 +54,8 @@ be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
 "RandomForestClassifier". When a single model is used, it can be passed as
 a string.}
 
-\item{theme}{For internal use by Nottinghamshire Healthcare NHS Foundation
-Trust or other trusts that use theme labels ("Access",
+\item{theme}{A string. For internal use by Nottinghamshire Healthcare NHS
+Foundation Trust or other trusts that use theme labels ("Access",
 "Environment/ facilities" etc.). The column name of the theme variable.
 Defaults to \code{NULL}. If supplied, the theme variable will be used as a
 predictor (along with the text predictor) in the model that is fitted
@@ -73,36 +68,18 @@ well as in the predictions. This is the only criticality value that
 are improving model performance, but are also correcting possible
 erroneous assignments of values other than "3" that are attributed to
 human error.}
-
-\item{python_setup}{A \code{logical} whether to set up the \code{Python} version,
-virtual environment etc. that can be controlled with arguments
-\code{sys_setenv}, \code{which_python}, \code{which_venv} and \code{venv_name}. These
-arguments will be ignored when \code{python_setup} is \code{FALSE}. The purpose of
-\code{python_setup} is that users may wish to control the \code{Python} parameters
-outside the actual function, for the session in general.}
-
-\item{sys_setenv}{A string in the form "path_to_python/python.exe",
-indicating which Python to use (e.g. from a virtual environment).}
-
-\item{which_python}{Same as \code{sys_setenv}.}
-
-\item{which_venv}{A string that can be "conda", "miniconda" or "python".}
-
-\item{venv_name}{String. The name of the virtual environment.}
-
-\item{text_col_name}{A string with the column name of the text variable.}
 }
 \value{
 A fitted \code{Scikit-learn} pipeline containing a number of objects that
 can be accessed with the \code{$} sign (see examples). For a partial list see
 "Atributes" in \href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{\code{sklearn.model_selection.RandomizedSearchCV}}.
 Do not be surprised if more objects are in the pipeline than those in the
-aforementioned "Attributes" list. Python objects can contain a wide array
-of objects, from numeric results (e.g. the pipeline's accuracy),
+aforementioned "Attributes" list. Python objects can contain several
+objects, from numeric results (e.g. the pipeline's accuracy),
 to \emph{methods} (i.e. functions in the R lingo) and \emph{classes}. In Python,
 these are normally accessed with \verb{object.<whatever>}, but in R the
 command is \verb{object$<whatever>}. For instance, one can access method
-\code{predict()} to make predictions on unseen data. See examples.
+\code{predict()} to make predictions on unseen data. See Examples.
 }
 \description{
 Prepare and fit a text classification pipeline with
@@ -165,20 +142,9 @@ warnings are simply a result of an internal check in the over-sampler of
 \href{https://imbalanced-learn.org/stable/install.html}{\code{imblearn}}.
 }
 \examples{
-# One can set the python.exe and virtual environment directly in the pxtextmineR
-# functions or globally, with experienceAnalysis
-# (https://github.com/CDU-data-science-team/experienceAnalysis).
-
-experienceAnalysis::prep_python(
-  sys_setenv = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-  which_python = "C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe",
-  which_venv = "conda",
-  venv_name = "pxtextmining_venv"
-)
-
 # Prepare training and test sets
 data_splits <- pxtextmineR::factory_data_load_and_split_r(
-  filename = text_data,
+  filename = pxtextmineR::text_data,
   target = "label",
   predictor = "feedback",
   test_size = 0.90) # Make a small training set for a faster run in this example

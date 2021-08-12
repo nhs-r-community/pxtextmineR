@@ -2,7 +2,7 @@
 % Please edit documentation in R/text_classification_pipeline_r.R
 \name{text_classification_pipeline_r}
 \alias{text_classification_pipeline_r}
-\title{Whole pipeline}
+\title{Fit and evaluate the pipeline}
 \usage{
 text_classification_pipeline_r(
   filename,
@@ -12,32 +12,128 @@ text_classification_pipeline_r(
   ordinal = FALSE,
   tknz = "spacy",
   metric = "class_balance_accuracy_score",
-  cv = 5,
-  n_iter = 100,
-  n_jobs = 5,
+  cv = 2,
+  n_iter = 1,
+  n_jobs = 1,
   verbose = 3,
   learners = c("SGDClassifier"),
-  objects_to_save = c("pipeline", "tuning results", "predictions",
-    "accuracy per class", "index - training data", "index - test data", "bar plot"),
-  save_objects_to_server = FALSE,
-  save_objects_to_disk = FALSE,
-  save_pipeline_as = "default",
-  results_folder_name = "results",
   reduce_criticality = FALSE,
-  theme = NULL,
-  python_setup = FALSE,
-  sys_setenv,
-  which_python,
-  which_venv,
-  venv_name
+  theme = NULL
 )
 }
 \arguments{
-\item{venv_name}{}
+\item{filename}{A data frame with the data (class and text columns),
+otherwise the dataset name (CSV), including full path to the data folder
+(if not in the project's working directory), and the data type suffix
+(".csv").}
+
+\item{target}{A string with the name of the response variable.}
+
+\item{predictor}{A string with the name of the predictor variable.}
+
+\item{test_size}{Numeric. Proportion of data that will form the test dataset.}
+
+\item{ordinal}{Whether to fit an ordinal classification model. The ordinal
+model is the implementation of \href{https://www.cs.waikato.ac.nz/~eibe/pubs/ordinal_tech_report.pdf}{Frank and Hall (2001)}
+that can use any standard classification model that calculates
+probabilities.}
+
+\item{tknz}{Tokenizer to use ("spacy" or "wordnet").}
+
+\item{metric}{A string. Scorer to use during pipeline tuning
+("accuracy_score", "balanced_accuracy_score", "matthews_corrcoef",
+"class_balance_accuracy_score").}
+
+\item{cv}{Number of cross-validation folds.}
+
+\item{n_iter}{Number of parameter settings that are sampled (see
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{\code{sklearn.model_selection.RandomizedSearchCV}}).}
+
+\item{n_jobs}{Number of jobs to run in parallel (see \code{sklearn.model_selection.RandomizedSearchCV}).
+\strong{NOTE:} If your machine does not have the number of cores specified in
+\code{n_jobs}, then an error will be returned.}
+
+\item{verbose}{Controls the verbosity (see \code{sklearn.model_selection.RandomizedSearchCV}).}
+
+\item{learners}{A vector of \code{Scikit-learn} names of the learners to tune. Must
+be one or more of "SGDClassifier", "RidgeClassifier", "Perceptron",
+"PassiveAggressiveClassifier", "BernoulliNB", "ComplementNB",
+"MultinomialNB", "KNeighborsClassifier", "NearestCentroid",
+"RandomForestClassifier". When a single model is used, it can be passed as
+a string.}
+
+\item{reduce_criticality}{Logical. For internal use by Nottinghamshire
+Healthcare NHS Foundation Trust or other trusts that hold data on
+criticality. If \code{TRUE}, then all records with a criticality of "-5"
+(respectively, "5") are assigned a criticality of "-4" (respectively, "4").
+This is to avoid situations where the pipeline breaks due to a lack of
+sufficient data for "-5" and/or "5". Defaults to \code{FALSE}.}
+
+\item{theme}{A string. For internal use by Nottinghamshire Healthcare NHS
+Foundation Trust or other trusts that use theme labels ("Access",
+"Environment/ facilities" etc.). The column name of the theme variable.
+Defaults to \code{NULL}. If supplied, the theme variable will be used as a
+predictor (along with the text predictor) in the model that is fitted
+with criticality as the response variable. The rationale is two-fold.
+First, to help the model improve predictions on criticality when the
+theme labels are readily available. Second, to force the criticality for
+"Couldn't be improved" to always be "3" in the training and test data, as
+well as in the predictions. This is the only criticality value that
+"Couldn't be improved" can take, so by forcing it to always be "3", we
+are improving model performance, but are also correcting possible
+erroneous assignments of values other than "3" that are attributed to
+human error.}
 }
 \value{
-
+A list of length 7:
+\itemize{
+\item{A fitted \code{Scikit-learn} pipeline containing a number of objects
+that can be accessed with the \code{$} sign (see examples). For a
+partial list see "Atributes" in
+\href{https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html}{\code{sklearn.model_selection.RandomizedSearchCV}}.
+Do not be surprised if more objects are in the pipeline than
+those in the aforementioned "Attributes" list. Python objects can
+contain several objects, from numeric results (e.g. the
+pipeline's accuracy), to \emph{methods} (i.e. functions in the R
+lingo) and \emph{classes}. In Python, these are normally accessed with
+\verb{object.<whatever>}, but in R the command is \verb{object$<whatever>}.
+For instance, one can access method \code{predict()} to make  to make
+predictions on unseen data. See Examples.}
+\item{\code{tuning_results} A data frame with all (hyper)parameter values
+and models tried during fitting.
+}
+\item{\code{pred} A vector with the predictions on the test
+set.
+}
+\item{\code{accuracy_per_class} A data frame with accuracies per class.}
+\item{\code{p_compare_models_bar} A bar plot comparing the mean scores (of
+the user-supplied \code{metric} parameter) from the cross-validation
+on the training set, for the best (hyper)parameter values for
+each learner.
+}
+\item{\code{index_training_data} The row names/indices of the training
+data.
+}
+\item{\code{index_test_data} The row names/indices of the test data.}
+}
 }
 \description{
-Whole pipeline
+Split the data, build and fit the pipeline, produce performance metrics.
+}
+\details{
+This function brings together the three functions that run chunks of
+the process independently, namely splitting data into training and test
+sets (\code{\link{factory_data_load_and_split_r}}), building and fitting
+the pipeline (\code{\link{factory_pipeline_r}}), and assessing pipeline
+performance (\code{\link{factory_model_performance_r}}).
+}
+\references{
+Frank E. & Hall M. (2001). A Simple Approach to Ordinal Classification.
+\emph{Machine Learning: ECML 2001} 145--156.
+
+Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O.,
+Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A.,
+Cournapeau D., Brucher M., Perrot M. & Duchesnay E. (2011),
+\href{https://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html}{Scikit-learn: Machine Learning in Python}.
+\emph{Journal of Machine Learning Research} 12:2825–-2830.
 }

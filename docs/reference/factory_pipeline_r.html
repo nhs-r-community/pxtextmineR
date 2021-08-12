@@ -127,12 +127,7 @@ Scikit-learn." />
   learners <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SGDClassifier"</span>, <span class='st'>"RidgeClassifier"</span>, <span class='st'>"Perceptron"</span>,
     <span class='st'>"PassiveAggressiveClassifier"</span>, <span class='st'>"BernoulliNB"</span>, <span class='st'>"ComplementNB"</span>, <span class='st'>"MultinomialNB"</span>,
     <span class='st'>"RandomForestClassifier"</span><span class='op'>)</span>,
-  theme <span class='op'>=</span> <span class='cn'>NULL</span>,
-  python_setup <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  sys_setenv <span class='op'>=</span> <span class='cn'>NULL</span>,
-  which_python <span class='op'>=</span> <span class='cn'>NULL</span>,
-  which_venv <span class='op'>=</span> <span class='cn'>NULL</span>,
-  venv_name <span class='op'>=</span> <span class='cn'>NULL</span>
+  theme <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -207,36 +202,6 @@ well as in the predictions. This is the only criticality value that
 are improving model performance, but are also correcting possible
 erroneous assignments of values other than "3" that are attributed to
 human error.</p></td>
-    </tr>
-    <tr>
-      <th>python_setup</th>
-      <td><p>A <code>logical</code> whether to set up the <code>Python</code> version,
-virtual environment etc. that can be controlled with arguments
-<code>sys_setenv</code>, <code>which_python</code>, <code>which_venv</code> and <code>venv_name</code>. These
-arguments will be ignored when <code>python_setup</code> is <code>FALSE</code>. The purpose of
-<code>python_setup</code> is that users may wish to control the <code>Python</code> parameters
-outside the actual function, for the session in general.</p></td>
-    </tr>
-    <tr>
-      <th>sys_setenv</th>
-      <td><p>A string in the form "path_to_python/python.exe",
-indicating which Python to use (e.g. from a virtual environment).</p></td>
-    </tr>
-    <tr>
-      <th>which_python</th>
-      <td><p>Same as <code>sys_setenv</code>.</p></td>
-    </tr>
-    <tr>
-      <th>which_venv</th>
-      <td><p>A string that can be "conda", "miniconda" or "python".</p></td>
-    </tr>
-    <tr>
-      <th>venv_name</th>
-      <td><p>String. The name of the virtual environment.</p></td>
-    </tr>
-    <tr>
-      <th>text_col_name</th>
-      <td><p>A string with the column name of the text variable.</p></td>
     </tr>
     </table>
 
@@ -319,20 +284,9 @@ Hyperparameters of Machine Learning Algorithms.
 <a href='https://arxiv.org/abs/1802.09596'>https://arxiv.org/abs/1802.09596</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># One can set the python.exe and virtual environment directly in the pxtextmineR</span>
-<span class='co'># functions or globally, with experienceAnalysis</span>
-<span class='co'># (https://github.com/CDU-data-science-team/experienceAnalysis).</span>
-
-<span class='fu'>experienceAnalysis</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/experienceAnalysis/man/prep_python.html'>prep_python</a></span><span class='op'>(</span>
-  sys_setenv <span class='op'>=</span> <span class='st'>"C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe"</span>,
-  which_python <span class='op'>=</span> <span class='st'>"C:/Users/andreas.soteriades/Anaconda3/envs/pxtextmining_venv/python.exe"</span>,
-  which_venv <span class='op'>=</span> <span class='st'>"conda"</span>,
-  venv_name <span class='op'>=</span> <span class='st'>"pxtextmining_venv"</span>
-<span class='op'>)</span>
-
-<span class='co'># Prepare training and test sets</span>
+    <pre class="examples"><div class='input'><span class='co'># Prepare training and test sets</span>
 <span class='va'>data_splits</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'><a href='factory_data_load_and_split_r.html'>factory_data_load_and_split_r</a></span><span class='op'>(</span>
-  filename <span class='op'>=</span> <span class='va'>text_data</span>,
+  filename <span class='op'>=</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span>,
   target <span class='op'>=</span> <span class='st'>"label"</span>,
   predictor <span class='op'>=</span> <span class='st'>"feedback"</span>,
   test_size <span class='op'>=</span> <span class='fl'>0.90</span><span class='op'>)</span> <span class='co'># Make a small training set for a faster run in this example</span>
@@ -341,23 +295,23 @@ Hyperparameters of Machine Learning Algorithms.
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 6
 #&gt;  $ x_train    :'data.frame':	929 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:929] "No" "Staff to be more engaged with service users. " "Everyone as been so kind. I have been physical and mentally comfortable." "No, it was great." ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([7831,  122, 7186, 7933, 2249, 3766, 3094, 2257, 5514, 5476,
+#&gt;   ..$ predictor: chr [1:929] "Staff was nice." "A bit difficult to understand the staff when they talk to you wearing masks.  Have lost a few items since I been here as well." "There were odd things that I found disturbing" "Nothing" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([1116, 6904, 6642, 8361, 2488, 7989, 1716, 2237, 5699, 3859,
 #&gt;             ...
-#&gt;             4658, 5568, 3602, 3180, 1542, 7941, 4749, 5991, 2144,  407],
+#&gt;             3891, 7769, 2108, 4564, 4055,  682,  647, 4854, 3162, 7381],
 #&gt;            dtype='int64', length=929)
 #&gt;  $ x_test     :'data.frame':	8362 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:8362] "The staff were very helpful and friendly." "More physio." "Nothing" "ÃƒÂ¢Ã¢â\200šÂ¬Ã…â\200œlovely peopleÃƒÂ¢Ã¢â\200šÂ¬Ã‚Â\235" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([ 890, 3357, 8571, 1588, 5956, 6498, 8639, 2637, 5050, 3795,
+#&gt;   ..$ predictor: chr [1:8362] "Nothing all good" "Nothing" "No problems, felt looked after" "Rob, amazing mental health practitioner. Very kind, understand." ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([8593, 6048, 5986,  859, 6784, 2277, 1378, 3834, 4280, 9275,
 #&gt;             ...
-#&gt;             5771, 6306,  129, 5111, 3836, 1219, 8330, 1430,  390, 4902],
+#&gt;             2161, 4236, 4514, 2251, 5990, 2676, 1207, 2797, 3007, 2741],
 #&gt;            dtype='int64', length=8362)
-#&gt;  $ y_train    : Named chr [1:929] "Couldn't be improved" "Staff" "Staff" "Couldn't be improved" ...
-#&gt;   ..- attr(*, "names")= chr [1:929] "7831" "122" "7186" "7933" ...
-#&gt;  $ y_test     : Named chr [1:8362] "Staff" "Access" "Couldn't be improved" "Staff" ...
-#&gt;   ..- attr(*, "names")= chr [1:8362] "890" "3357" "8571" "1588" ...
-#&gt;  $ index_train: int [1:929] 7831 122 7186 7933 2249 3766 3094 2257 5514 5476 ...
-#&gt;  $ index_test : int [1:8362] 890 3357 8571 1588 5956 6498 8639 2637 5050 3795 ...</div><div class='input'>
+#&gt;  $ y_train    : Named chr [1:929] "Staff" "Communication" "Care received" "Couldn't be improved" ...
+#&gt;   ..- attr(*, "names")= chr [1:929] "1116" "6904" "6642" "8361" ...
+#&gt;  $ y_test     : Named chr [1:8362] "Couldn't be improved" "Couldn't be improved" "Miscellaneous" "Staff" ...
+#&gt;   ..- attr(*, "names")= chr [1:8362] "8593" "6048" "5986" "859" ...
+#&gt;  $ index_train: int [1:929] 1116 6904 6642 8361 2488 7989 1716 2237 5699 3859 ...
+#&gt;  $ index_test : int [1:8362] 8593 6048 5986 859 6784 2277 1378 3834 4280 9275 ...</div><div class='input'>
 <span class='co'># Fit the pipeline</span>
 <span class='va'>pipe</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>factory_pipeline_r</span><span class='op'>(</span>
   x <span class='op'>=</span> <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_train</span>,
@@ -371,7 +325,7 @@ Hyperparameters of Machine Learning Algorithms.
 
 <span class='co'># Mean cross-validated score of the best_estimator</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='va'>best_score_</span>
-</div><div class='output co'>#&gt; [1] 0.4370296</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.4154431</div><div class='input'>
 <span class='co'># Best parameters during tuning</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='va'>best_params_</span>
 </div><div class='output co'>#&gt; $sampling__kw_args
@@ -386,7 +340,7 @@ Hyperparameters of Machine Learning Algorithms.
 #&gt; &lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__preprocessor
-#&gt; &lt;function text_preprocessor at 0x0000000063644280&gt;
+#&gt; &lt;function text_preprocessor at 0x0000000063EB9F70&gt;
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__norm
 #&gt; NULL
@@ -400,14 +354,14 @@ Hyperparameters of Machine Learning Algorithms.
 #&gt; 
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__min_df
-#&gt; [1] 3
+#&gt; [1] 1
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer__max_df
 #&gt; [1] 0.95
 #&gt; 
 #&gt; $preprocessor__texttr__text__transformer
-#&gt; TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(3, 3), norm=None,
-#&gt;                 preprocessor=&lt;function text_preprocessor at 0x0000000063644280&gt;,
+#&gt; TfidfVectorizer(max_df=0.95, ngram_range=(3, 3), norm=None,
+#&gt;                 preprocessor=&lt;function text_preprocessor at 0x0000000063EB9F70&gt;,
 #&gt;                 tokenizer=&lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;,
 #&gt;                 use_idf=False)
 #&gt; 
@@ -421,39 +375,39 @@ Hyperparameters of Machine Learning Algorithms.
 #&gt; KBinsDiscretizer(n_bins=3, strategy='kmeans')
 #&gt; 
 #&gt; $featsel__selector__score_func
-#&gt; &lt;function chi2 at 0x000000006362C3A0&gt;
+#&gt; &lt;function chi2 at 0x0000000063E86C10&gt;
 #&gt; 
 #&gt; $featsel__selector__percentile
-#&gt; [1] 85
+#&gt; [1] 100
 #&gt; 
 #&gt; $featsel__selector
-#&gt; SelectPercentile(percentile=85,
-#&gt;                  score_func=&lt;function chi2 at 0x000000006362C3A0&gt;)
+#&gt; SelectPercentile(percentile=100,
+#&gt;                  score_func=&lt;function chi2 at 0x0000000063E86C10&gt;)
 #&gt; 
 #&gt; $clf__estimator__penalty
-#&gt; [1] "l2"
+#&gt; [1] "elasticnet"
 #&gt; 
 #&gt; $clf__estimator__max_iter
 #&gt; [1] 10000
 #&gt; 
 #&gt; $clf__estimator__loss
-#&gt; [1] "hinge"
+#&gt; [1] "log"
 #&gt; 
 #&gt; $clf__estimator__class_weight
-#&gt; [1] "balanced"
+#&gt; NULL
 #&gt; 
 #&gt; $clf__estimator
-#&gt; SGDClassifier(class_weight='balanced', max_iter=10000)
+#&gt; SGDClassifier(loss='log', max_iter=10000, penalty='elasticnet')
 #&gt; </div><div class='input'>
 <span class='co'># Make predictions</span>
 <span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='va'>pipe</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_test</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Care received"        "Care received"        "Couldn't be improved"
-#&gt; [4] "Care received"        "Miscellaneous"        "Care received"       </div><div class='input'>
+</div><div class='output co'>#&gt; [1] "Couldn't be improved" "Couldn't be improved" "Care received"       
+#&gt; [4] "Staff"                "Staff"                "Staff"               </div><div class='input'>
 <span class='co'># Performance on test set #</span>
 <span class='co'># Can be done using the pipe's score() method</span>
 <span class='va'>pipe</span><span class='op'>$</span><span class='fu'>score</span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_test</span>, <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_test</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.4384119</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.485171</div><div class='input'>
 <span class='co'># Or using dplyr</span>
 <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_test</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
@@ -465,7 +419,7 @@ Hyperparameters of Machine Learning Algorithms.
   <span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/pull.html'>pull</a></span><span class='op'>(</span><span class='va'>check</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.4384119</div></pre>
+</div><div class='output co'>#&gt; [1] 0.485171</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
