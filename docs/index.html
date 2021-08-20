@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -53,6 +53,18 @@
 </li>
 <li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/pxtextmineR-vignette.html">pxtextmineR-vignette</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -89,7 +101,7 @@
 </li>
 <li>
 <p>Tell <code>reticulate</code> to use the “r-reticulate” virtual environment:</p>
-<p><code>reticulate::use_condaenv("r-reticulate"", required = TRUE)</code></p>
+<p><code><a href="https://rdrr.io/pkg/reticulate/man/use_python.html">reticulate::use_condaenv("r-reticulate", required = TRUE)</a></code></p>
 </li>
 <li>
 <p>Install Python package <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> in “r-reticulate”:</p>
@@ -103,17 +115,17 @@ system("pip install https://github.com/explosion/spacy-models/releases/download/
 </li>
 </ol>
 <p>All steps in one go:</p>
-<pre><code>devtools::install_github("nhs-r-community/pxtextmineR")
+<pre><code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")
 # If not using Conda, comment out the next two lines and uncomment the two lines 
 # following them.
 reticulate::conda_create("r-reticulate")
-reticulate::use_condaenv("r-reticulate"", required = TRUE)
+reticulate::use_condaenv("r-reticulate", required = TRUE)
 # reticulate::virtualenv_create("r-reticulate")
-# reticulate::use_virtualenv("r-reticulate"", required = TRUE)
+# reticulate::use_virtualenv("r-reticulate", required = TRUE)
 reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
-</code></pre>
+</a></code></pre>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">

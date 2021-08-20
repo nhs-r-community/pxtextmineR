@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -86,6 +86,18 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/pxtextmineR-vignette.html">pxtextmineR-vignette</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -262,7 +274,11 @@ the process independently, namely splitting data into training and test
 sets (<code><a href='factory_data_load_and_split_r.html'>factory_data_load_and_split_r</a></code>), building and fitting
 the pipeline (<code><a href='factory_pipeline_r.html'>factory_pipeline_r</a></code>) on the <strong>whole</strong> dataset
 (train and test), and assessing pipeline performance
-(<code><a href='factory_model_performance_r.html'>factory_model_performance_r</a></code>).</p>
+(<code><a href='factory_model_performance_r.html'>factory_model_performance_r</a></code>). <br /><br />
+For details on what the pipeline does/how it works, see
+<code><a href='factory_pipeline_r.html'>factory_pipeline_r</a></code>'s
+<a href='https://nhs-r-community.github.io/pxtextmineR/reference/factory_pipeline_r.html#details'>Details</a>
+section.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Frank E. &amp; Hall M. (2001). A Simple Approach to Ordinal Classification.
@@ -331,174 +347,153 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
   <span class='va'>tuning_results</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>learner</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>contains</a></span><span class='op'>(</span><span class='st'>"mean_test"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;         learner mean_test_Accuracy mean_test_Balanced Accuracy
-#&gt; 0 SGDClassifier          0.6790415                   0.4720629
-#&gt; 8 SGDClassifier          0.6719625                   0.4527744
-#&gt; 2 SGDClassifier          0.6374395                   0.4758325
-#&gt; 3 SGDClassifier          0.5835633                   0.4033896
-#&gt; 7 SGDClassifier          0.5936745                   0.3838040
-#&gt; 6 MultinomialNB          0.6149074                   0.3803596
-#&gt; 4 SGDClassifier          0.5657946                   0.3470423
-#&gt; 5 SGDClassifier          0.4893845                   0.3079516
-#&gt; 1 SGDClassifier          0.5201491                   0.2946684
-#&gt; 9 MultinomialNB          0.5176947                   0.2790157
+#&gt; 4 SGDClassifier          0.6715300                   0.5013942
+#&gt; 1 SGDClassifier          0.6589618                   0.4581018
+#&gt; 6 SGDClassifier          0.6661845                   0.4519327
+#&gt; 2 SGDClassifier          0.6143283                   0.5083009
+#&gt; 0 SGDClassifier          0.5800976                   0.3893256
+#&gt; 3 SGDClassifier          0.5698417                   0.3845209
+#&gt; 5 SGDClassifier          0.5835638                   0.3580641
+#&gt; 9 SGDClassifier          0.5763402                   0.3594686
+#&gt; 8 SGDClassifier          0.4742163                   0.3035555
+#&gt; 7 SGDClassifier          0.5000735                   0.2675814
 #&gt;   mean_test_Matthews Correlation Coefficient mean_test_Class Balance Accuracy
-#&gt; 0                                  0.5804486                        0.4524982
-#&gt; 8                                  0.5683848                        0.4325695
-#&gt; 2                                  0.5319608                        0.4210076
-#&gt; 3                                  0.4606345                        0.3632832
-#&gt; 7                                  0.4680378                        0.3490020
-#&gt; 6                                  0.4903623                        0.3437986
-#&gt; 4                                  0.4298463                        0.3088490
-#&gt; 5                                  0.3429014                        0.2589611
-#&gt; 1                                  0.3640649                        0.2485893
-#&gt; 9                                  0.3600822                        0.2282714</div><div class='input'>
+#&gt; 4                                  0.5764118                        0.4699561
+#&gt; 1                                  0.5574294                        0.4392583
+#&gt; 6                                  0.5620717                        0.4330502
+#&gt; 2                                  0.5237374                        0.4263495
+#&gt; 0                                  0.4545223                        0.3486860
+#&gt; 3                                  0.4452702                        0.3402990
+#&gt; 5                                  0.4527250                        0.3187684
+#&gt; 9                                  0.4420251                        0.3176287
+#&gt; 8                                  0.3218030                        0.2496858
+#&gt; 7                                  0.3510613                        0.1972607</div><div class='input'>
 <span class='co'># A glance at the (hyper)parameters and their tuned values</span>
 <span class='va'>text_pipe</span><span class='op'>$</span>
   <span class='va'>tuning_results</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>learner</span>, <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/starts_with.html'>contains</a></span><span class='op'>(</span><span class='st'>"param_"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 'data.frame':	10 obs. of  22 variables:
+</div><div class='output co'>#&gt; 'data.frame':	10 obs. of  21 variables:
 #&gt;  $ learner                                                    : chr  "SGDClassifier" "SGDClassifier" "SGDClassifier" "SGDClassifier" ...
-#&gt;  $ param_sampling__kw_args                                    : chr  "{'up_balancing_counts': 300}" "{'up_balancing_counts': 300}" "{'up_balancing_counts': 800}" "{'up_balancing_counts': 800}" ...
+#&gt;  $ param_sampling__kw_args                                    : chr  "{'up_balancing_counts': 800}" "{'up_balancing_counts': 300}" "{'up_balancing_counts': 300}" "{'up_balancing_counts': 800}" ...
 #&gt;  $ param_preprocessor__texttr__text__transformer__use_idf     :List of 10
+#&gt;   ..$ : logi TRUE
 #&gt;   ..$ : logi FALSE
 #&gt;   ..$ : logi FALSE
 #&gt;   ..$ : logi TRUE
 #&gt;   ..$ : logi FALSE
-#&gt;   ..$ : logi FALSE
-#&gt;   ..$ : logi FALSE
+#&gt;   ..$ : logi TRUE
 #&gt;   ..$ : logi FALSE
 #&gt;   ..$ : logi FALSE
 #&gt;   ..$ : logi TRUE
 #&gt;   ..$ : logi FALSE
-#&gt;  $ param_preprocessor__texttr__text__transformer__tokenizer   : chr  "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x00000000FB259D60&gt;" ...
-#&gt;  $ param_preprocessor__texttr__text__transformer__preprocessor: chr  "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" "&lt;function text_preprocessor at 0x0000000063F69AF0&gt;" ...
-#&gt;  $ param_preprocessor__texttr__text__transformer__norm        : chr  "None" "None" "l2" "l2" ...
-#&gt;  $ param_preprocessor__texttr__text__transformer__ngram_range : chr  "(1, 3)" "(1, 3)" "(1, 3)" "(2, 3)" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__tokenizer   : chr  "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x0000000031FBEDF0&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x0000000031FBEDF0&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x0000000031FBEDF0&gt;" "&lt;pxtextmining.helpers.tokenization.LemmaTokenizer object at 0x0000000031FBEDF0&gt;" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__preprocessor: chr  "&lt;function text_preprocessor at 0x0000000063D48550&gt;" "&lt;function text_preprocessor at 0x0000000063D48550&gt;" "&lt;function text_preprocessor at 0x0000000063D48550&gt;" "&lt;function text_preprocessor at 0x0000000063D48550&gt;" ...
+#&gt;  $ param_preprocessor__texttr__text__transformer__norm        :List of 10
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : NULL
+#&gt;   ..$ : NULL
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : NULL
+#&gt;   ..$ : chr "l2"
+#&gt;   ..$ : NULL
+#&gt;  $ param_preprocessor__texttr__text__transformer__ngram_range : chr  "(1, 3)" "(1, 3)" "(1, 3)" "(1, 3)" ...
 #&gt;  $ param_preprocessor__texttr__text__transformer__min_df      :List of 10
 #&gt;   ..$ : int 3
 #&gt;   ..$ : int 3
-#&gt;   ..$ : int 1
 #&gt;   ..$ : int 3
 #&gt;   ..$ : int 1
 #&gt;   ..$ : int 3
 #&gt;   ..$ : int 3
+#&gt;   ..$ : int 1
 #&gt;   ..$ : int 3
 #&gt;   ..$ : int 1
 #&gt;   ..$ : int 1
 #&gt;  $ param_preprocessor__texttr__text__transformer__max_df      :List of 10
-#&gt;   ..$ : num 0.7
 #&gt;   ..$ : num 0.95
 #&gt;   ..$ : num 0.95
-#&gt;   ..$ : num 0.7
 #&gt;   ..$ : num 0.95
 #&gt;   ..$ : num 0.7
 #&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.7
+#&gt;   ..$ : num 0.95
 #&gt;   ..$ : num 0.95
 #&gt;   ..$ : num 0.95
 #&gt;   ..$ : num 0.7
-#&gt;  $ param_preprocessor__texttr__text__transformer              : chr  "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ "TfidfVectorizer(max_df=0.7, min_df=3, ngram_range=(1, 3), norm=None,\n                preprocessor=&lt;function te"| __truncated__ ...
+#&gt;  $ param_preprocessor__texttr__text__transformer              : chr  "TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(1, 3),\n                preprocessor=&lt;function text_preproc"| __truncated__ "TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(1, 3),\n                preprocessor=&lt;function text_preproc"| __truncated__ "TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(1, 3),\n                preprocessor=&lt;function text_preproc"| __truncated__ "TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(1, 3),\n                preprocessor=&lt;function text_preproc"| __truncated__ ...
 #&gt;  $ param_preprocessor__sentimenttr__scaler__scaler__n_bins    :List of 10
-#&gt;   ..$ : int 8
-#&gt;   ..$ : int 4
-#&gt;   ..$ : int 8
-#&gt;   ..$ : int 4
 #&gt;   ..$ : int 4
 #&gt;   ..$ : int 4
 #&gt;   ..$ : int 8
+#&gt;   ..$ : int 8
+#&gt;   ..$ : int 4
 #&gt;   ..$ : int 4
 #&gt;   ..$ : int 8
 #&gt;   ..$ : int 8
-#&gt;  $ param_preprocessor__sentimenttr__scaler__scaler            : chr  "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" "KBinsDiscretizer(n_bins=8, strategy='kmeans')" ...
+#&gt;   ..$ : int 4
+#&gt;   ..$ : int 4
+#&gt;  $ param_preprocessor__sentimenttr__scaler__scaler            : chr  "KBinsDiscretizer(n_bins=4, strategy='kmeans')" "KBinsDiscretizer(n_bins=4, strategy='kmeans')" "KBinsDiscretizer(n_bins=4, strategy='kmeans')" "KBinsDiscretizer(n_bins=4, strategy='kmeans')" ...
 #&gt;  $ param_preprocessor__lengthtr__scaler__scaler               : chr  "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" "KBinsDiscretizer(n_bins=3, strategy='kmeans')" ...
-#&gt;  $ param_featsel__selector__score_func                        : chr  "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" "&lt;function chi2 at 0x0000000063F51EE0&gt;" ...
+#&gt;  $ param_featsel__selector__score_func                        : chr  "&lt;function chi2 at 0x0000000063D2F670&gt;" "&lt;function chi2 at 0x0000000063D2F670&gt;" "&lt;function chi2 at 0x0000000063D2F670&gt;" "&lt;function chi2 at 0x0000000063D2F670&gt;" ...
 #&gt;  $ param_featsel__selector__percentile                        :List of 10
-#&gt;   ..$ : int 85
-#&gt;   ..$ : int 70
-#&gt;   ..$ : int 85
 #&gt;   ..$ : int 70
 #&gt;   ..$ : int 100
-#&gt;   ..$ : int 100
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 70
 #&gt;   ..$ : int 85
 #&gt;   ..$ : int 100
-#&gt;   ..$ : int 85
-#&gt;   ..$ : int 85
-#&gt;  $ param_featsel__selector                                    : chr  "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" "SelectPercentile(percentile=85,\n                 score_func=&lt;function chi2 at 0x0000000063F51EE0&gt;)" ...
-#&gt;  $ param_clf__estimator__penalty                              :List of 10
-#&gt;   ..$ : chr "l2"
-#&gt;   ..$ : chr "elasticnet"
-#&gt;   ..$ : chr "l2"
-#&gt;   ..$ : chr "l2"
-#&gt;   ..$ : chr "l2"
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : chr "elasticnet"
-#&gt;   ..$ : chr "elasticnet"
-#&gt;   ..$ : chr "l2"
-#&gt;   ..$ : num NaN
+#&gt;   ..$ : int 70
+#&gt;   ..$ : int 70
+#&gt;  $ param_featsel__selector                                    : chr  "SelectPercentile(percentile=70,\n                 score_func=&lt;function chi2 at 0x0000000063D2F670&gt;)" "SelectPercentile(percentile=70,\n                 score_func=&lt;function chi2 at 0x0000000063D2F670&gt;)" "SelectPercentile(percentile=70,\n                 score_func=&lt;function chi2 at 0x0000000063D2F670&gt;)" "SelectPercentile(percentile=70,\n                 score_func=&lt;function chi2 at 0x0000000063D2F670&gt;)" ...
+#&gt;  $ param_clf__estimator__penalty                              : chr  "elasticnet" "elasticnet" "l2" "elasticnet" ...
 #&gt;  $ param_clf__estimator__max_iter                             :List of 10
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
-#&gt;   ..$ : num NaN
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
 #&gt;   ..$ : int 10000
-#&gt;   ..$ : num NaN
-#&gt;  $ param_clf__estimator__loss                                 :List of 10
-#&gt;   ..$ : chr "log"
-#&gt;   ..$ : chr "log"
-#&gt;   ..$ : chr "log"
-#&gt;   ..$ : chr "hinge"
-#&gt;   ..$ : chr "hinge"
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : chr "hinge"
-#&gt;   ..$ : chr "log"
-#&gt;   ..$ : chr "log"
-#&gt;   ..$ : num NaN
-#&gt;  $ param_clf__estimator__class_weight                         : chr  "None" "None" "None" "None" ...
-#&gt;  $ param_clf__estimator                                       : chr  "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" "SGDClassifier(loss='log', max_iter=10000)" ...
-#&gt;  $ param_clf__estimator__alpha                                :List of 10
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : int 1
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num NaN
-#&gt;   ..$ : num 0.1
-#&gt;  - attr(*, "pandas.index")=Int64Index([0, 8, 2, 3, 7, 6, 4, 5, 1, 9], dtype='int64')</div><div class='input'>
+#&gt;   ..$ : int 10000
+#&gt;   ..$ : int 10000
+#&gt;  $ param_clf__estimator__loss                                 : chr  "hinge" "hinge" "log" "log" ...
+#&gt;  $ param_clf__estimator__class_weight                         : chr  "balanced" "None" "None" "balanced" ...
+#&gt;  $ param_clf__estimator                                       : chr  "SGDClassifier(class_weight='balanced', max_iter=10000, penalty='elasticnet')" "SGDClassifier(class_weight='balanced', max_iter=10000, penalty='elasticnet')" "SGDClassifier(class_weight='balanced', max_iter=10000, penalty='elasticnet')" "SGDClassifier(class_weight='balanced', max_iter=10000, penalty='elasticnet')" ...
+#&gt;  - attr(*, "pandas.index")=Int64Index([4, 1, 6, 2, 0, 3, 5, 9, 8, 7], dtype='int64')</div><div class='input'>
 <span class='co'># Learner performance barplot</span>
 <span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>p_compare_models_bar</span>
 </div><div class='img'><img src='text_classification_pipeline_r-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Predictions on test set</span>
 <span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>pred</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Staff"                "Couldn't be improved" "Staff"               
-#&gt; [4] "Staff"                "Couldn't be improved" "Couldn't be improved"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "Couldn't be improved" "Access"               "Couldn't be improved"
+#&gt; [4] "Communication"        "Communication"        "Staff"               </div><div class='input'>
 <span class='co'># We can also get the row indices of the train and test data. Note that, in</span>
 <span class='co'># Python, indices start from 0. For example, the row indices of a data frame</span>
 <span class='co'># with 5 rows would be 0, 1, 2, 3 &amp; 4.</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_training_data</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1]  1  2  4  7  9 10</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_test_data</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1]  0  3  5  6  8 13</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0 1 2 3 4 5</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sort.html'>sort</a></span><span class='op'>(</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_test_data</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1]  6  8 12 14 18 20</div><div class='input'>
 <span class='co'># Let's subset the original data set</span>
 <span class='va'>text_dataset</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span>
 <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>text_dataset</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fl'>0</span><span class='op'>:</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>text_dataset</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='va'>data_train</span> <span class='op'>&lt;-</span> <span class='va'>text_dataset</span><span class='op'>[</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_training_data</span>, <span class='op'>]</span>
 <span class='va'>data_test</span> <span class='op'>&lt;-</span> <span class='va'>text_dataset</span><span class='op'>[</span><span class='va'>text_pipe</span><span class='op'>$</span><span class='va'>index_test_data</span>, <span class='op'>]</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_train</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 'data.frame':	6923 obs. of  3 variables:
-#&gt;  $ label      : chr  "Staff" "Staff" "Care received" "Care received" ...
-#&gt;  $ criticality: chr  "0" "0" "0" "4" ...
-#&gt;  $ feedback   : chr  "It was my first visit to your clinic and I must say the nurse was very professional and very helpful and supportive." "I found XXXX very polite.  After asking lots of questions he diagnosed my problem" "Really helpful to see all of the team at once and reassuring to know what we are doing is the right.  Beneficia"| __truncated__ "After strugglIng on my own for a few months I found the abIlIty to talk to someone who, could and would try to "| __truncated__ ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_test</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 'data.frame':	3410 obs. of  3 variables:
-#&gt;  $ label      : chr  "Couldn't be improved" "Access" "Staff" "Staff" ...
-#&gt;  $ criticality: chr  "3" "-2" "-2" "4" ...
-#&gt;  $ feedback   : chr  "Everyone has been great" "More time. " "The nurse who did my first apt was okay, but appeared to not believe everything I said." "Very friendly, excellent care." ...</div></pre>
+</div><div class='output co'>#&gt; 'data.frame':	6922 obs. of  3 variables:
+#&gt;  $ label      : chr  "Staff" "Care received" "Staff" "Care received" ...
+#&gt;  $ criticality: chr  "3" "0" "-3" "1" ...
+#&gt;  $ feedback   : chr  "I find that Matthew is excellent at explaining and understanding and very good at listening." "Very well looked after." "Care, consIderatIon and help gIven by the two people who come to the house was excellent, cannot thInk of any w"| __truncated__ "Lovely ward" ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_test</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 'data.frame':	3411 obs. of  3 variables:
+#&gt;  $ label      : chr  "Couldn't be improved" "Environment/ facilities" "Couldn't be improved" "Staff" ...
+#&gt;  $ criticality: chr  "3" "-2" "-3" "0" ...
+#&gt;  $ feedback   : chr  "Nothing the staff were marvellous" "I know it was very busy at times. Could be quieter especially outside and we all felt the heat." "No." "XXXX was so patient and kind and helped me regain so much confidence. Thank you" ...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
