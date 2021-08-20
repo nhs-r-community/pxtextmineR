@@ -1,5 +1,8 @@
 .onLoad <- function(libname, pkgname) {
 
+  # reticulate::configure_environment("r-reticulate")
+  reticulate::configure_environment("r-reticulate_andreas")
+
   # Use superassignment to update global reference to imported packages
 
   on_load_data_load_and_split <<- reticulate::import(
