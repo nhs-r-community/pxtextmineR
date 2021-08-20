@@ -42,7 +42,7 @@ There are a few things that need to be done to install and set up `pxtextmineR`.
    used by R packages [...]_"
 1. Tell `reticulate` to use the "r-reticulate" virtual environment:
   
-   `reticulate::use_condaenv("r-reticulate"", required = TRUE)`
+   `reticulate::use_condaenv("r-reticulate", required = TRUE)`
 1. Install Python package [`pxtextmining`](https://pypi.org/project/pxtextmining/) 
    in "r-reticulate":
   
@@ -65,9 +65,9 @@ devtools::install_github("nhs-r-community/pxtextmineR")
 # If not using Conda, comment out the next two lines and uncomment the two lines 
 # following them.
 reticulate::conda_create("r-reticulate")
-reticulate::use_condaenv("r-reticulate"", required = TRUE)
+reticulate::use_condaenv("r-reticulate", required = TRUE)
 # reticulate::virtualenv_create("r-reticulate")
-# reticulate::use_virtualenv("r-reticulate"", required = TRUE)
+# reticulate::use_virtualenv("r-reticulate", required = TRUE)
 reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
