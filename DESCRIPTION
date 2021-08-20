@@ -34,3 +34,7 @@ Remotes:
     CDU-data-science-team/experienceAnalysis
 Depends: 
     R (>= 2.10)
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
