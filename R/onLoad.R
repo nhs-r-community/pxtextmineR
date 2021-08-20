@@ -12,7 +12,7 @@
     reticulate::use_condaenv(condaenv = venv, required = TRUE)
   } else if (grepl("miniconda", venv_manager)) {
     reticulate::use_miniconda(condaenv = venv, required = TRUE)
-  } else if (grepl("virtualenv", venv_manager)) {
+  } else {
     reticulate::use_virtualenv(virtualenv = venv, required = TRUE)
   }
 
