@@ -13,7 +13,7 @@
   } else if (grepl("miniconda", venv_manager)) {
     reticulate::use_miniconda(condaenv = venv, required = TRUE)
   } else {
-    reticulate::use_virtualenv(virtualenv = venv, required = TRUE)
+    reticulate::use_virtualenv(virtualenv = venv_manager, required = TRUE) # Here, virtualenv should be the path.
   }
 
   # Use superassignment to update global reference to imported packages
@@ -45,6 +45,11 @@
 
   on_load_sentiments <<- reticulate::import(
     "pxtextmining.helpers.sentiment_scores",
+    delay_load = TRUE
+  )
+
+  on_load_cba <<- reticulate::import(
+    "pxtextmining.helpers.metrics",
     delay_load = TRUE
   )
 }
