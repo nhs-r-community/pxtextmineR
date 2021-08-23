@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pipe operator — %&gt;% • pxtextmineR</title>
+<title>Sentiment analysis with Python packages — sentiment_scores_r • pxtextmineR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Pipe operator — %&gt;%" />
-<meta property="og:description" content="See magrittr::%&amp;gt;% for details." />
+<meta property="og:title" content="Sentiment analysis with Python packages — sentiment_scores_r" />
+<meta property="og:description" content="Calculate sentiment indicators from
+TextBlob and
+vaderSentiment." />
 
 
 
@@ -115,34 +117,75 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pipe operator</h1>
+    <h1>Sentiment analysis with Python packages</h1>
     
-    <div class="hidden name"><code>pipe.Rd</code></div>
+    <div class="hidden name"><code>sentiment_scores_r.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>See <code>magrittr::%&gt;%</code> for details.</p>
+    <p>Calculate sentiment indicators from
+<a href='https://textblob.readthedocs.io/en/dev/'><code>TextBlob</code></a> and
+<a href='https://pypi.org/project/vaderSentiment/'><code>vaderSentiment</code></a>.</p>
     </div>
 
-    <pre class="usage"><span class='va'>lhs</span> <span class='op'>%&gt;%</span> <span class='va'>rhs</span></pre>
+    <pre class="usage"><span class='fu'>sentiment_scores_r</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>lhs</th>
-      <td><p>A value or the magrittr placeholder.</p></td>
-    </tr>
-    <tr>
-      <th>rhs</th>
-      <td><p>A function call using the magrittr semantics.</p></td>
+      <th>x</th>
+      <td><p>Data frame. The text to run sentiment analysis on.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The result of calling <code>rhs(lhs)</code>.</p>
+    <p>Data frame. All indicators produced by <code>TextBlob</code> (polarity and
+subjectivity) and <code>vaderSentiment</code> (positive, negative and neutral
+sentiments, and compound score).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>This function complements existing sentiment analysis packages in R
+(e.g. <code>tidytext</code>or <code>quanteda.sentiment</code>) with the popular Python
+sentiment analysis libraries <code>TextBlob</code> and <code>vaderSentiment</code>.<br /><br />
+<code>TextBlob</code> calculates two indicators, namely <em>polarity</em> and
+<em>subjectivity</em>. The polarity score is a float within the range  <code>[-1, 1]</code>,
+where -1 is for very negative sentiment, +1 is for very  positive
+sentiment, and 0 is for neutral sentiment. The subjectivity is a float
+within the range <code>[0, 1]</code>, where 0 is very objective and 1 is very
+subjective. <br /><br />
+<code>vaderSentiment</code> assigns to the given text three sentiment proportions
+(positive, negative and neutral) whose scores sum to 1. It also
+calculates a compound score that is a float in <code>[-1, 1]</code>, similar to
+<code>TextBlob</code>'s polarity.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>sentiments</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='va'><a href='text_data.html'>text_data</a></span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>feedback</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>sentiment_scores_r</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>sentiments</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   text_blob_polarity text_blob_subjectivity vader_neg vader_neu vader_pos
+#&gt; 1            0.00000              0.0000000     0.000     1.000     0.000
+#&gt; 2           -0.09375              0.4000000     0.265     0.735     0.000
+#&gt; 3            0.20000              0.2625000     0.000     1.000     0.000
+#&gt; 4            0.23125              0.4669643     0.199     0.625     0.176
+#&gt; 5            0.02500              0.3250000     0.029     0.913     0.058
+#&gt; 6           -0.27500              0.5750000     0.091     0.813     0.096
+#&gt;   vader_compound
+#&gt; 1         0.0000
+#&gt; 2        -0.2040
+#&gt; 3         0.0000
+#&gt; 4         0.0490
+#&gt; 5         0.3400
+#&gt; 6         0.2967</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/apply.html'>apply</a></span><span class='op'>(</span><span class='va'>sentiments</span>, <span class='fl'>2</span>, <span class='va'>range</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      text_blob_polarity text_blob_subjectivity vader_neg vader_neu vader_pos
+#&gt; [1,]                 -1                      0         0         0         0
+#&gt; [2,]                  1                      1         1         1         1
+#&gt;      vader_compound
+#&gt; [1,]        -0.9916
+#&gt; [2,]         0.9971</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

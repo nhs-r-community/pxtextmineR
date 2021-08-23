@@ -170,7 +170,13 @@
 #'     check = sum(check) / nrow(.)
 #'   ) %>%
 #'   dplyr::pull(check) %>%
-#'   unique()
+#'   unique
+#'
+#' # We can also use other metrics, such as the Class Balance Accuracy score
+#' pxtextmineR::class_balance_accuracy_score_r(
+#'   data_splits$y_test,
+#'   preds
+#' )
 
 factory_pipeline_r <- function(x, y, tknz = "spacy", ordinal = FALSE,
                                metric = "class_balance_accuracy_score",

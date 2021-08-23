@@ -1,4 +1,20 @@
-.onLoad <- function(libname, pkgname) {
+.onLoad <- function(libname = "pxtextmining", pkgname = "pxtextmineR") {
+
+  reticulate::configure_environment(pkgname)
+
+  # Tell the package which Python virtual environment to use
+  venv <- Sys.getenv("PXTEXTMINER_PYTHON_VENV")
+  venv_manager <- Sys.getenv("PXTEXTMINER_PYTHON_VENV_MANAGER")
+  # Better use grepl instead of e.g. `if ("condaenv" %in% venv_manager)` because
+  # the supplied venv can be "[e]ither the name of, or the path to, a Python
+  # virtual environment." (see reticulate::use_python).
+  if (grepl("condaenv", venv_manager)) {
+    reticulate::use_condaenv(condaenv = venv, required = TRUE)
+  } else if (grepl("miniconda", venv_manager)) {
+    reticulate::use_miniconda(condaenv = venv, required = TRUE)
+  } else {
+    reticulate::use_virtualenv(virtualenv = venv_manager, required = TRUE) # Here, virtualenv should be the path.
+  }
 
   # Use superassignment to update global reference to imported packages
 
@@ -29,6 +45,11 @@
 
   on_load_sentiments <<- reticulate::import(
     "pxtextmining.helpers.sentiment_scores",
+    delay_load = TRUE
+  )
+
+  on_load_cba <<- reticulate::import(
+    "pxtextmining.helpers.metrics",
     delay_load = TRUE
   )
 }
