@@ -17,7 +17,7 @@ well as helper functions for e.g. sentiment analysis with Python's
 [`textBlob`](https://textblob.readthedocs.io/en/dev/) and
 [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
 
-How does wrapper work? It uses R package [`reticulate`](https://rstudio.github.io/reticulate/),
+How does the wrapper work? It uses R package [`reticulate`](https://rstudio.github.io/reticulate/),
 which provides tools for interoperability between Python and R.
 
 ## Installation and setup
@@ -92,7 +92,7 @@ We have opted for a more "invasive" [approach](https://github.com/nhs-r-communit
 with no issues. This requires the following steps:
 
 1. Create a Python virtual environment using e.g. Anaconda, Miniconda or a 
-   Virtual Python Environment builder.
+   Virtual Python Environment.
 1. In it, install `pxtextmining` and the `spaCy` models:
    ```
    pip install pxtextmining
@@ -104,20 +104,22 @@ with no issues. This requires the following steps:
    `~/.Renviron`, and add the following lines:
 
     ```
-    PXTEXTMINER_PYTHON_VENV_MANAGER=name_or_file_to_venv_manager
+    PXTEXTMINER_PYTHON_VENV_MANAGER=name_or_path_to_venv_manager
     PXTEXTMINER_PYTHON_VENV=name_of_venv
     ```
  
     where "name_of_venv" should be replaced by the name of the virtual 
-    environment to use (no quotes), e.g. "my_virtual_environment"; 
-    and "name_or_file_to_venv_manager" should be replaced by the name or path 
+    and "name_or_path_to_venv_manager" should be replaced by the name or path 
     to the virtual environment manager. If using Conda or Miniconda, replace 
-    "name_or_file_to_venv_manager" with "conda" or "miniconda" (unquoted) 
-    respectively. If  using a Virtual Python Environment builder, replace 
-    "name_or_file_to_venv_manager" with the path to the virtual environment.
+    "name_or_path_to_venv_manager" with "conda" or "miniconda" (unquoted) 
+    respectively. If  using a Virtual Python Environment, replace 
+    "name_or_path_to_venv_manager" with the path to the virtual environment's 
+    `python.exe` e.g. `/home/user/venvs/myvenv/bin/python`.
 1. Good idea to restart R Studio.
 1. Run `devtools::install_github("nhs-r-community/pxtextmineR")` in the R 
    console.
+1. Again, good idea to restart R Studio. If there are error messages that the 
+   user-specified Python environment cannot be set, close and re-open R Studio.
    
 ## References
 Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O., 
