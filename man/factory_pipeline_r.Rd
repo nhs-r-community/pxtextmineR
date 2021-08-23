@@ -187,7 +187,13 @@ data_splits$y_test \%>\%
     check = sum(check) / nrow(.)
   ) \%>\%
   dplyr::pull(check) \%>\%
-  unique()
+  unique
+
+# We can also use other metrics, such as the Class Balance Accuracy score
+pxtextmineR::class_balance_accuracy_score_r(
+  data_splits$y_test,
+  preds
+)
 }
 \references{
 Frank E. & Hall M. (2001). A Simple Approach to Ordinal Classification.

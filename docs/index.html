@@ -87,7 +87,7 @@
 <p>An R wrapper for Python’s <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> library- a pipeline to classify text-based patient experience data.</p>
 <p><strong>Function documentation</strong>: <a href="https://nhs-r-community.github.io/pxtextmineR/" class="uri">https://nhs-r-community.github.io/pxtextmineR/</a>.</p>
 <p>Package <code>pxtextmineR</code> does not wrap <em>everything</em> from <code>pxtextmining</code>, but selected functions that will offer R users new opportunities for modelling. For example, the whole <a href="https://scikit-learn.org/stable/index.html"><code>Scikit-learn</code></a> (Pedregosa et al., 2011) text classification pipeline is wrapped, as well as helper functions for e.g. sentiment analysis with Python’s <a href="https://textblob.readthedocs.io/en/dev/"><code>textBlob</code></a> and <a href="https://pypi.org/project/vaderSentiment/"><code>vaderSentiment</code></a>.</p>
-<p>How does wrapper work? It uses R package <a href="https://rstudio.github.io/reticulate/"><code>reticulate</code></a>, which provides tools for interoperability between Python and R.</p>
+<p>How does the wrapper work? It uses R package <a href="https://rstudio.github.io/reticulate/"><code>reticulate</code></a>, which provides tools for interoperability between Python and R.</p>
 <div id="installation-and-setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation-and-setup" class="anchor"></a>Installation and setup</h2>
@@ -97,18 +97,18 @@
 <li>
 <p>Create a Python <em>virtual environment</em>. If not familiar with virtual environments please take a look at <a href="https://docs.python.org/3/tutorial/venv.html">this</a> and <a href="https://virtualenv.pypa.io/en/stable/">this</a>. R package <code>reticulate</code> has functions to create a Python virtual environment via the R console. Refer to <code><a href="https://rdrr.io/pkg/reticulate/man/conda-tools.html">reticulate::conda_create</a></code> and <code><a href="https://rdrr.io/pkg/reticulate/man/virtualenv-tools.html">reticulate::virtualenv_create</a></code>. For example, if using <a href="https://docs.conda.io/en/latest/index.html#">Conda</a>, run</p>
 <p><code><a href="https://rdrr.io/pkg/reticulate/man/conda-tools.html">reticulate::conda_create("r-reticulate")</a></code></p>
-<p>where “r-reticulate” is the name of <code>reticulate</code>‘s default virtual environment. Using this default virtual environment for <code>pxtextmineR</code> is strongly recommended because it makes the setup so much easier. According to the <code>reticulate</code> authors’ <a href="https://rstudio.github.io/reticulate/articles/package.html">own words</a> “<em>[i]t’s much more straightforward for users if there is a common environment used by R packages […]</em>”</p>
+<p>where <code>r-reticulate</code> is the name of <code>reticulate</code>‘s default virtual environment. Using this default virtual environment for <code>pxtextmineR</code> is strongly recommended because it makes the setup so much easier. According to the <code>reticulate</code> authors’ <a href="https://rstudio.github.io/reticulate/articles/package.html">own words</a> “<em>[i]t’s much more straightforward for users if there is a common environment used by R packages […]</em>”</p>
 </li>
 <li>
-<p>Tell <code>reticulate</code> to use the “r-reticulate” virtual environment:</p>
+<p>Tell <code>reticulate</code> to use the <code>r-reticulate</code> virtual environment:</p>
 <p><code><a href="https://rdrr.io/pkg/reticulate/man/use_python.html">reticulate::use_condaenv("r-reticulate", required = TRUE)</a></code></p>
 </li>
 <li>
-<p>Install Python package <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> in “r-reticulate”:</p>
+<p>Install Python package <a href="https://pypi.org/project/pxtextmining/"><code>pxtextmining</code></a> in <code>r-reticulate</code>:</p>
 <p><code><a href="https://rdrr.io/pkg/reticulate/man/py_install.html">reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)</a></code></p>
 </li>
 <li>
-<p>We also need to install a couple of <a href="https://github.com/explosion/spacy-models"><code>spaCy</code></a> models in “r-reticulate”. These are obtained from URL links and thus need to be installed separately. In the R console run:</p>
+<p>We also need to install a couple of <a href="https://github.com/explosion/spacy-models"><code>spaCy</code></a> models in <code>r-reticulate</code>. These are obtained from URL links and thus need to be installed separately. In the R console run:</p>
 <pre><code><a href="https://rdrr.io/r/base/system.html">system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")</a></code></pre>
@@ -126,6 +126,34 @@ reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip 
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
 </a></code></pre>
+<div id="a-note-of-caution" class="section level3">
+<h3 class="hasAnchor">
+<a href="#a-note-of-caution" class="anchor"></a>A NOTE OF CAUTION!</h3>
+<p>The installation instructions above did not work in all machines on which the installation process was tested. There were two problems:</p>
+<ol>
+<li>In some machines <code>reticulate</code> would simply refuse to install in virtual environment <code>r-reticulate</code> the version of <code>Scikit-learn</code> that <code>pxtextmining</code> uses (v 0.23.2).</li>
+<li>When trying to use a virtual environment other than <code>r-reticulate</code> (i.e. <code><a href="https://rdrr.io/pkg/reticulate/man/use_python.html">reticulate::use_condaenv("&lt;some_other_virtual_environment&gt;", required = TRUE)</a></code>), the behaviour of <code>reticulate</code> was confusing. On the one hand, it would run <code>pxtextmineR</code> functions using the user-specified virtual environment. However, on the other hand, when running commands to build e.g. function documentation with R package <code>pkgdown</code>, <code>reticulate</code> would automatically set <code>r-reticulate</code> as the default environment, causing the code to break.</li>
+</ol>
+<p>We have opted for a more “invasive” <a href="https://github.com/nhs-r-community/pxtextmineR/commit/44fdce8ddf0a53f57d57936f78b4a477484d2ba0">approach</a> to fix this problem so that users can use any virtual environment with no issues. This requires the following steps:</p>
+<ol>
+<li><p>Create a Python virtual environment using e.g. Anaconda, Miniconda or a Virtual Python Environment.</p></li>
+<li>
+<p>In it, install <code>pxtextmining</code> and the <code>spaCy</code> models:</p>
+<pre><code>pip install pxtextmining
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
+</code></pre>
+</li>
+<li>
+<p>Use a text editor to open your <code>.Renviron</code> file, normally located in <code>~/.Renviron</code>, and add the following lines:</p>
+<pre><code>PXTEXTMINER_PYTHON_VENV_MANAGER=name_or_path_to_venv_manager
+PXTEXTMINER_PYTHON_VENV=name_of_venv</code></pre>
+<p>where “name_of_venv” should be replaced by the name of the virtual and “name_or_path_to_venv_manager” should be replaced by the name or path to the virtual environment manager. If using Conda or Miniconda, replace “name_or_path_to_venv_manager” with “conda” or “miniconda” (unquoted) respectively. If using a Virtual Python Environment, replace “name_or_path_to_venv_manager” with the path to the virtual environment’s <code>python.exe</code> e.g. <code>/home/user/venvs/myvenv/bin/python</code>.</p>
+</li>
+<li><p>Good idea to restart R Studio.</p></li>
+<li><p>Run <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")</a></code> in the R console.</p></li>
+</ol>
+</div>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
