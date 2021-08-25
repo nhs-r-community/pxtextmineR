@@ -93,11 +93,11 @@ with no issues. This requires the following steps:
 
 1. Create a Python virtual environment using e.g. Anaconda, Miniconda or a 
    Virtual Python Environment.
-1. In it, install `pxtextmining` and the `spaCy` models:
+1. Activate it and install `pxtextmining` and the `spaCy` models:
    ```
    pip install pxtextmining
-   system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
-   system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
+   pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
+   pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz
 
    ```
 1. Use a text editor to open your `.Renviron` file, normally located in 
@@ -109,10 +109,10 @@ with no issues. This requires the following steps:
     ```
  
     where "name_of_venv" should be replaced by the name of the virtual 
-    and "name_or_path_to_venv_manager" should be replaced by the name or path 
-    to the virtual environment manager. If using Conda or Miniconda, replace 
-    "name_or_path_to_venv_manager" with "conda" or "miniconda" (unquoted) 
-    respectively. If  using a Virtual Python Environment, replace 
+    environment and "name_or_path_to_venv_manager" should be replaced by the 
+    name or path to the virtual environment manager. If using Conda or Miniconda, 
+    replace "name_or_path_to_venv_manager" with "conda" or "miniconda" 
+    (unquoted) respectively. If  using a Virtual Python Environment, replace 
     "name_or_path_to_venv_manager" with the path to the virtual environment's 
     `python.exe` e.g. `/home/user/venvs/myvenv/bin/python`.
 1. Good idea to restart R Studio.
