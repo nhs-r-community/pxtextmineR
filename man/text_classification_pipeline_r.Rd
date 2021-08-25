@@ -152,10 +152,13 @@ section.
 #   y = data_splits$y_train,
 #   tknz = "spacy",
 #   ordinal = FALSE,
-#   metric = "accuracy_score",
-#   cv = 2, n_iter = 1, n_jobs = 1, verbose = 3,
+#   metric = "class_balance_accuracy_score",
+#   cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
 #   learners = c("SGDClassifier", "MultinomialNB")
 # )
+# (SGDClassifier represents both logistic regression and linear SVM. This
+# depends on the value of the "loss" hyperparameter, which can be "log" or
+# "hinge". This is set internally in factory_pipeline_r).
 #
 # # Assess model performance
 # pipe_performance <- pxtextmineR::factory_model_performance_r(

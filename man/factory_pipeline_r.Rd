@@ -169,6 +169,9 @@ pipe$best_score_
 # Best parameters during tuning
 pipe$best_params_
 
+# Is the best model a linear SVM (loss = "hinge") or logistic regression (loss = "log)?
+pipe$best_params_$clf__estimator__loss
+
 # Make predictions
 preds <- pipe$predict(data_splits$x_test)
 head(preds)

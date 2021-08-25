@@ -73,7 +73,7 @@ and returns the train/test data and their row/position indices." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -211,29 +211,31 @@ Cournapeau D., Brucher M., Perrot M. &amp; Duchesnay E. (2011),
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; List of 6
 #&gt;  $ x_train            :'data.frame':	6923 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:6923] "For the care I received whist being an inpatient." "They explained what it was for and made sure I was ok." "Excellent care and a pleasant ward to stay on." "I was looked after very well during the day but had am awful night the first night. I cried all night and repea"| __truncated__ ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([6564, 1974, 6472, 6788, 3175, 2625, 7063, 4560, 5907,  105,
+#&gt;   ..$ predictor: chr [1:6923] "XXXX came to see mum at home.  She was marvellous, treated mum with respect and informative." "FrIendly and helpful HV." "Good that we were able to have a face to face appointment.  \nEverything explained in a manner we could underst"| __truncated__ "Nothing" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([4565, 3245, 2370, 9224, 5480, 4230, 3001,   84, 6643, 2074,
 #&gt;             ...
-#&gt;             6539, 1900, 2677, 5866, 9490, 1134, 7503, 3558, 6632, 2080],
+#&gt;              889, 3808, 7678, 2660, 6408, 9136, 3534, 6024, 4619, 5379],
 #&gt;            dtype='int64', length=6923)
 #&gt;  $ x_test             :'data.frame':	3411 obs. of  1 variable:
-#&gt;   ..$ predictor: chr [1:3411] "It was friendly and helpful." "More people doing jabs." "Due to how the staff were on the go all the time. I have no complaints. Just to the government who should increase your wages." "Nothing" ...
-#&gt;   ..- attr(*, "pandas.index")=Int64Index([3838,  625, 8226, 9416,  156, 8175,   53,  798, 9467, 6360,
+#&gt;   ..$ predictor: chr [1:3411] "Just been happy on the ward" "Did well tracking improvements to anxiety and depression, discussing and challenging irrational thoughts was done well. " "As fIrst tIme mum, advIse and InformatIon provIded was extremely helpful -  would recomend to other parents too." "Nothing" ...
+#&gt;   ..- attr(*, "pandas.index")=Int64Index([ 6850,  2155,  2803,  9491,  9811,  6822,  1813, 10243,  3598,
+#&gt;              5264,
 #&gt;             ...
-#&gt;             4012,  984, 4114, 3142, 6247,  275, 1389, 6553, 5018, 6399],
+#&gt;              3101,  2122,  1232,  4194,  7644,  4990,  6936,  2427,  4411,
+#&gt;              9425],
 #&gt;            dtype='int64', length=3411)
-#&gt;  $ y_train            : chr [1:6923(1d)] "Care received" "Communication" "Care received" "Dignity" ...
+#&gt;  $ y_train            : chr [1:6923(1d)] "Staff" "Staff" "Communication" "Couldn't be improved" ...
 #&gt;   ..- attr(*, "dimnames")=List of 1
-#&gt;   .. ..$ : chr [1:6923] "6564" "1974" "6472" "6788" ...
-#&gt;  $ y_test             : chr [1:3411(1d)] "Staff" "Staff" "Couldn't be improved" "Couldn't be improved" ...
+#&gt;   .. ..$ : chr [1:6923] "4565" "3245" "2370" "9224" ...
+#&gt;  $ y_test             : chr [1:3411(1d)] "Care received" "Care received" "Communication" "Couldn't be improved" ...
 #&gt;   ..- attr(*, "dimnames")=List of 1
-#&gt;   .. ..$ : chr [1:3411] "3838" "625" "8226" "9416" ...
-#&gt;  $ index_training_data: int [1:6923] 6564 1974 6472 6788 3175 2625 7063 4560 5907 105 ...
-#&gt;  $ index_test_data    : int [1:3411] 3838 625 8226 9416 156 8175 53 798 9467 6360 ...</div><div class='input'>
+#&gt;   .. ..$ : chr [1:3411] "6850" "2155" "2803" "9491" ...
+#&gt;  $ index_training_data: int [1:6923] 4565 3245 2370 9224 5480 4230 3001 84 6643 2074 ...
+#&gt;  $ index_test_data    : int [1:3411] 6850 2155 2803 9491 9811 6822 1813 10243 3598 5264 ...</div><div class='input'>
 <span class='co'># Each record in the split data is tagged with the row index of the original dataset</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "6564" "1974" "6472" "6788" "3175" "2625"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "6564" "1974" "6472" "6788" "3175" "2625"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "4565" "3245" "2370" "9224" "5480" "4230"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "4565" "3245" "2370" "9224" "5480" "4230"</div><div class='input'>
 <span class='co'># Note that, in Python, indices start from 0 and go up to number_of_records - 1</span>
 <span class='va'>all_indices</span> <span class='op'>&lt;-</span> <span class='va'>data_splits</span><span class='op'>$</span><span class='va'>y_train</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>

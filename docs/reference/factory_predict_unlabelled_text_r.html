@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -219,7 +219,7 @@ passed by the user (see <code>column_names</code>).</p>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>preds_all_cols</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 'data.frame':	10334 obs. of  4 variables:
-#&gt;  $ feedback_preds: chr  "Couldn't be improved" "Care received" "Couldn't be improved" "Communication" ...
+#&gt;  $ feedback_preds: chr  "Couldn't be improved" "Care received" "Staff" "Care received" ...
 #&gt;  $ label         : chr  "Couldn't be improved" "Environment/ facilities" "Access" "Communication" ...
 #&gt;  $ criticality   : chr  "3" "-1" "-2" "-1" ...
 #&gt;  $ feedback      : chr  "Nothing." "Temperature in theatre a little low." "Same service available at Bingham Health Centre." "Appointment details given over phone - no physical evidence/reminder which could cause problems. Other than tha"| __truncated__ ...
@@ -235,10 +235,10 @@ passed by the user (see <code>column_names</code>).</p>
 </div><div class='output co'>#&gt;         feedback_preds
 #&gt; 1 Couldn't be improved
 #&gt; 2        Care received
-#&gt; 3 Couldn't be improved
-#&gt; 4        Communication
-#&gt; 5        Care received
-#&gt; 6 Couldn't be improved</div><div class='input'>
+#&gt; 3                Staff
+#&gt; 4        Care received
+#&gt; 5        Miscellaneous
+#&gt; 6        Care received</div><div class='input'>
 <span class='co'># Return data frame with predictions column and columns label and feedback from</span>
 <span class='co'># the supplied data frame</span>
 <span class='va'>preds_label_text</span> <span class='op'>&lt;-</span> <span class='fu'>pxtextmineR</span><span class='fu'>::</span><span class='fu'>factory_predict_unlabelled_text_r</span><span class='op'>(</span>
@@ -249,7 +249,7 @@ passed by the user (see <code>column_names</code>).</p>
 
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>preds_label_text</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 'data.frame':	10334 obs. of  3 variables:
-#&gt;  $ feedback_preds: chr  "Couldn't be improved" "Care received" "Couldn't be improved" "Communication" ...
+#&gt;  $ feedback_preds: chr  "Couldn't be improved" "Care received" "Staff" "Care received" ...
 #&gt;  $ label         : chr  "Couldn't be improved" "Environment/ facilities" "Access" "Communication" ...
 #&gt;  $ feedback      : chr  "Nothing." "Temperature in theatre a little low." "Same service available at Bingham Health Centre." "Appointment details given over phone - no physical evidence/reminder which could cause problems. Other than tha"| __truncated__ ...
 #&gt;  - attr(*, "pandas.index")=RangeIndex(start=0, stop=10334, step=1)</div><div class='input'>
@@ -265,10 +265,10 @@ passed by the user (see <code>column_names</code>).</p>
 </div><div class='output co'>#&gt;            predictions
 #&gt; 1 Couldn't be improved
 #&gt; 2        Care received
-#&gt; 3 Couldn't be improved
-#&gt; 4        Communication
-#&gt; 5        Care received
-#&gt; 6 Couldn't be improved</div></pre>
+#&gt; 3                Staff
+#&gt; 4        Care received
+#&gt; 5        Miscellaneous
+#&gt; 6        Care received</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
