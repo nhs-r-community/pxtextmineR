@@ -34,7 +34,7 @@
 #' @references
 #' Mosley L. (2013). A balanced approach to the multi-class imbalance problem.
 #' _Graduate Theses and Dissertations_. 13537.
-#' https://lib.dr.iastate.edu/etd/13537
+#' https://lib.dr.iastate.edu/etd/13537.
 #'
 #' @examples
 #' x <- pxtextmineR::text_data %>%
