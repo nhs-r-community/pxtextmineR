@@ -76,6 +76,9 @@
 #'   cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
 #'   learners = c("SGDClassifier", "MultinomialNB")
 #' )
+#' # (SGDClassifier represents both logistic regression and linear SVM. This
+#' # depends on the value of the "loss" hyperparameter, which can be "log" or
+#' # "hinge". This is set internally in factory_pipeline_r).
 #'
 #' # Assess model performance
 #' pipe_performance <- pxtextmineR::factory_model_performance_r(
@@ -105,6 +108,15 @@
 #'
 #' # Learner performance barplot
 #' pipe_performance$p_compare_models_bar
+#' # Remember that we tried three models: Logistic regression (SGDClassifier with
+#' # "log" loss), linear SVM (SGDClassifier with "hinge" loss) and MultinomialNB.
+#' # Do not be surprised if one of these models does not show on the plot.
+#' # There are numerous values for the different (hyper)parameters (recall,
+#' # most of which are set internally) and only `n_iter = 10` iterations in this
+#' # example. As with `factory_pipeline` the choice of which (hyper)parameter
+#' # values to try out is random, one or more classifiers may not be chosen.
+#' # Increasing `n_iter` to a larger number would avoid this, at the expense of
+#' # longer fitting times (but with a possibly more accurate pipeline).
 #'
 #' # Predictions on test set
 #' preds <- pipe_performance$pred
@@ -137,7 +149,7 @@
 #'   dplyr::pull(check) %>%
 #'   unique()
 #'
-#'   score_refitted
+#' score_refitted
 #'
 #' # Compare this to the ACTUAL performance on the test dataset
 #' preds_actual <- pipe_performance$pred
@@ -153,9 +165,9 @@
 #'   dplyr::pull(check) %>%
 #'   unique()
 #'
-#'   score_actual
+#' score_actual
 #'
-#'   score_refitted - score_actual
+#' score_refitted - score_actual
 
 factory_model_performance_r <- function(pipe, x_train, y_train, x_test, y_test,
                                       metric)

@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -138,20 +138,21 @@ system("pip install https://github.com/explosion/spacy-models/releases/download/
 <ol>
 <li><p>Create a Python virtual environment using e.g. Anaconda, Miniconda or a Virtual Python Environment.</p></li>
 <li>
-<p>In it, install <code>pxtextmining</code> and the <code>spaCy</code> models:</p>
+<p>Activate it and install <code>pxtextmining</code> and the <code>spaCy</code> models:</p>
 <pre><code>pip install pxtextmining
-system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
-system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz
 </code></pre>
 </li>
 <li>
 <p>Use a text editor to open your <code>.Renviron</code> file, normally located in <code>~/.Renviron</code>, and add the following lines:</p>
 <pre><code>PXTEXTMINER_PYTHON_VENV_MANAGER=name_or_path_to_venv_manager
 PXTEXTMINER_PYTHON_VENV=name_of_venv</code></pre>
-<p>where “name_of_venv” should be replaced by the name of the virtual and “name_or_path_to_venv_manager” should be replaced by the name or path to the virtual environment manager. If using Conda or Miniconda, replace “name_or_path_to_venv_manager” with “conda” or “miniconda” (unquoted) respectively. If using a Virtual Python Environment, replace “name_or_path_to_venv_manager” with the path to the virtual environment’s <code>python.exe</code> e.g. <code>/home/user/venvs/myvenv/bin/python</code>.</p>
+<p>where “name_of_venv” should be replaced by the name of the virtual environment and “name_or_path_to_venv_manager” should be replaced by the name or path to the virtual environment manager. If using Conda or Miniconda, replace “name_or_path_to_venv_manager” with “conda” or “miniconda” (unquoted) respectively. If using a Virtual Python Environment, replace “name_or_path_to_venv_manager” with the path to the virtual environment’s <code>python.exe</code> e.g. <code>/home/user/venvs/myvenv/bin/python</code>.</p>
 </li>
 <li><p>Good idea to restart R Studio.</p></li>
 <li><p>Run <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")</a></code> in the R console.</p></li>
+<li><p>Again, good idea to restart R Studio. If there are error messages that the user-specified Python environment cannot be set, close and re-open R Studio.</p></li>
 </ol>
 </div>
 </div>

@@ -82,7 +82,7 @@ Scikit-learn." />
         <li>
   <a href="../index.html">
     <span class="fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -91,7 +91,7 @@ Scikit-learn." />
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -102,14 +102,14 @@ Scikit-learn." />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+
       </ul>
-      
+
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header>
 
@@ -117,7 +117,7 @@ Scikit-learn." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare and fit a text classification pipeline</h1>
-    
+
     <div class="hidden name"><code>factory_pipeline_r.Rd</code></div>
     </div>
 
@@ -349,75 +349,78 @@ Hyperparameters of Machine Learning Algorithms.
 </div><div class='output co'>#&gt; $sampling__kw_args
 #&gt; $sampling__kw_args$up_balancing_counts
 #&gt; [1] 300
-#&gt; 
-#&gt; 
+#&gt;
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__use_idf
 #&gt; [1] FALSE
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__tokenizer
 #&gt; &lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__preprocessor
 #&gt; &lt;function text_preprocessor at 0x00000000645663A0&gt;
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__norm
 #&gt; [1] "l2"
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__ngram_range
 #&gt; $preprocessor__texttr__text__transformer__ngram_range[[1]]
 #&gt; [1] 1
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__ngram_range[[2]]
 #&gt; [1] 3
-#&gt; 
-#&gt; 
+#&gt;
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__min_df
 #&gt; [1] 3
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer__max_df
 #&gt; [1] 0.95
-#&gt; 
+#&gt;
 #&gt; $preprocessor__texttr__text__transformer
 #&gt; TfidfVectorizer(max_df=0.95, min_df=3, ngram_range=(1, 3),
 #&gt;                 preprocessor=&lt;function text_preprocessor at 0x00000000645663A0&gt;,
 #&gt;                 tokenizer=&lt;pxtextmining.helpers.tokenization.LemmaTokenizer&gt;,
 #&gt;                 use_idf=False)
-#&gt; 
+#&gt;
 #&gt; $preprocessor__sentimenttr__scaler__scaler__n_bins
 #&gt; [1] 8
-#&gt; 
+#&gt;
 #&gt; $preprocessor__sentimenttr__scaler__scaler
 #&gt; KBinsDiscretizer(n_bins=8, strategy='kmeans')
-#&gt; 
+#&gt;
 #&gt; $preprocessor__lengthtr__scaler__scaler
 #&gt; KBinsDiscretizer(n_bins=3, strategy='kmeans')
-#&gt; 
+#&gt;
 #&gt; $featsel__selector__score_func
 #&gt; &lt;function chi2 at 0x000000006454E4C0&gt;
-#&gt; 
+#&gt;
 #&gt; $featsel__selector__percentile
 #&gt; [1] 100
-#&gt; 
+#&gt;
 #&gt; $featsel__selector
 #&gt; SelectPercentile(percentile=100,
 #&gt;                  score_func=&lt;function chi2 at 0x000000006454E4C0&gt;)
-#&gt; 
+#&gt;
 #&gt; $clf__estimator__penalty
 #&gt; [1] "elasticnet"
-#&gt; 
+#&gt;
 #&gt; $clf__estimator__max_iter
 #&gt; [1] 10000
-#&gt; 
+#&gt;
 #&gt; $clf__estimator__loss
 #&gt; [1] "log"
-#&gt; 
+#&gt;
 #&gt; $clf__estimator__class_weight
 #&gt; [1] "balanced"
-#&gt; 
+#&gt;
 #&gt; $clf__estimator
 #&gt; SGDClassifier(class_weight='balanced', loss='log', max_iter=10000,
 #&gt;               penalty='elasticnet')
 #&gt; </div><div class='input'>
+<span class='co'># Is the best model a linear SVM (loss = "hinge") or logistic regression (loss = "log)?</span>
+<span class='va'>pipe</span><span class='op'>$</span><span class='va'>best_params_</span><span class='op'>$</span><span class='va'>clf__estimator__loss</span>
+</div><div class='output co'>#&gt; [1] "log"</div><div class='input'>
 <span class='co'># Make predictions</span>
 <span class='va'>preds</span> <span class='op'>&lt;-</span> <span class='va'>pipe</span><span class='op'>$</span><span class='fu'>predict</span><span class='op'>(</span><span class='va'>data_splits</span><span class='op'>$</span><span class='va'>x_test</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>preds</span><span class='op'>)</span>
@@ -466,7 +469,7 @@ Hyperparameters of Machine Learning Algorithms.
       </footer>
    </div>
 
-  
+
 
 
   </body>

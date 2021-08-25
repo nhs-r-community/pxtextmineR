@@ -50,5 +50,5 @@ pxtextmineR::class_balance_accuracy_score_r(x$label, x$label_pred)
 \references{
 Mosley L. (2013). A balanced approach to the multi-class imbalance problem.
 \emph{Graduate Theses and Dissertations}. 13537.
-https://lib.dr.iastate.edu/etd/13537
+https://lib.dr.iastate.edu/etd/13537.
 }
