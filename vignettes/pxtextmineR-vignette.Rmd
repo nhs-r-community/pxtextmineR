@@ -16,4 +16,460 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(pxtextmineR)
+library(magrittr)
 ```
+
+Welcome to `pxtextmineR`'s vignette! 
+
+Package `pxtextmineR` is an R wrapper for  Python's [`pxtextmining`](https://pypi.org/project/pxtextmining/) library- a 
+pipeline to classify text-based patient experience data. The pipeline uses the 
+state-of-the-art Machine Learning Python library [`Scikit-learn`](https://scikit-learn.org/stable/index.html) (Pedregosa et al., 
+2011), which offers numerous top-notch models and methods for text 
+classification.
+
+The installation instructions are [here](https://nhs-r-community.github.io/pxtextmineR/index.html#installation-and-setup).
+Make sure to take a look at [this bit](https://nhs-r-community.github.io/pxtextmineR/index.html#a-note-of-caution) 
+too!
+
+## The pipeline functions
+The pipeline consists of four `factory_*` functions that implement different 
+stages to build the pipeline:
+
+- `factory_data_load_and_split_r` splits the data into training and test sets.
+- `factory_pipeline_r` prepares and fits a text classification pipeline.
+- `factory_model_performance_r` evaluates the performance of a fitted pipeline.
+- `factory_predict_unlabelled_text_r` predicts unlabelled text using the fitted 
+   pipeline.
+
+Function `text_classification_pipeline_r` conveniently brings together the first
+three of the aforementioned factories.
+
+### Splitting data
+Let's see how to split data into training and test sets with `pxtextmineR`. We 
+will use the package's dataset `text_data`, which is an open dataset with patient
+feedback text from different NHS (National Health Service) trusts in England, 
+UK.
+```{r, include = TRUE}
+# Prepare training and test sets
+data_splits <- pxtextmineR::factory_data_load_and_split_r(
+  filename = pxtextmineR::text_data,
+  target = "label",
+  predictor = "feedback",
+  test_size = 0.90) # Make a small training set for a faster run in this example
+
+# Let's take a look at the returned list
+str(data_splits)
+```
+
+From the printed results we note the following:
+
+- Objects `x_train` and `x_test` contain the predictor with the feedback text, 
+  and are data frames. The text column is internally renamed to "predictor". 
+  This is to ensure that the pipeline will not break if the user supplies a 
+  dataset with a different name for the text column.
+- Objects `y_train` and `y_test` contain the response variable and are 1D arrays.
+- When `Scikit-learn` splits the data, it assigns index values to the them. This
+  is convenient for knowing which of the data records belong to the training set
+  and which to the test set. The indices are available in objects 
+  `index_training_data` and `index_test_data`, but are also conveniently 
+  available as (row) names in objects `x_train/test` and `y_train/test`:
+  ```{r, include = TRUE}
+  # Each record in the split data is tagged with the row index of the original dataset
+  head(rownames(data_splits$x_train))
+  head(names(data_splits$y_train))
+  # Note that, in Python, indices start from 0 and go up to number_of_records - 1
+  all_indices <- data_splits$y_train %>%
+  names() %>%
+  c(names(data_splits$y_test)) %>%
+  as.numeric() %>%
+  sort()
+  head(all_indices) # Starts from zero
+  tail(all_indices) # Ends in nrow(text_data) - 1
+  length(all_indices) == nrow(text_data)
+  ```
+
+### Fitting the pipeline
+Function `factory_pipeline_r` can do standard or ordinal classification of text
+data, with a range of models that perform well in text classification settings 
+(logistic regression, Support Vector Machines, Naive Bayes models, 
+Random Forest). Logistic regression and linear support vector classification are 
+implemented with [`sklearn.linear_model.SGDClassifier`](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html#sklearn-linear-model-sgdclassifier), 
+which employs the former model using "log" loss and the latter using "hinge" 
+loss (see the [User Guide](https://scikit-learn.org/stable/modules/sgd.html#classification)). Both types of loss are set internally in the tuning grid of the pipeline.
+
+The pipeline tries both Bag-of-Words (BoW) and word vectors. Both options are 
+internally set as tunable parameters. For BoW, the default tokenizer is [`spaCy`](https://spacy.io/), although the option if [`NLTK`](https://www.nltk.org/) 
+is also available. At the time of development we were experimenting as to which 
+would result in faster and better results. With our data 
+(`pxtextmineR::text_data`), `spaCy` does a better job, faster. Generally, 
+although we have kept the option of `NLTK`, you are probably better off with 
+`spaCy`.
+
+Most tunable (hyper)parameters are set internally and cannot be changed by the 
+user. We did this for a very practical reason: you can spend hours if not days
+trying out more values in the search grid that minimally increase the 
+performance of the pipeline (e.g. from 75% accuracy to 76%). We therefore opted
+for value ranges that are observed to work well in practice. In any case, if you 
+are expert in a particular model and believe that changing one or more of these
+values would improve the pipeline, you are more than welcome to make a [pull 
+request](https://github.com/CDU-data-science-team/pxtextmining)!
+
+Finally, the best (hyper)parameter values for the pipeline during training with
+cross-validation (CV) can be determined with a range of metrics, from the standard 
+accuracy score to a few metrics that account for class imbalances. See the 
+[documentation](https://nhs-r-community.github.io/pxtextmineR/reference/factory_pipeline_r.html).
+
+Let's fit the pipeline! We will try two classifiers, namely `SGDClassifier` and 
+[`sklearn.naive_bayes.MultinomialNB`](https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html), with a two-fold CV and 10 iterations, resulting 
+in 2 X 10 = 20 fits. As mentioned earlier, `SGDClassifier` can be either 
+logistic regression or linear SVC. Let's see which one will win!
+
+(**NOTE**: If your machine does not have the number of cores specified in 
+`n_jobs`, then an error will be returned. For error-free experimentation, try 
+with `n_jobs = 1`.)
+
+```{r, include = TRUE}
+pipe <- pxtextmineR::factory_pipeline_r(
+  x = data_splits$x_train,
+  y = data_splits$y_train,
+  tknz = "spacy",
+  ordinal = FALSE,
+  metric = "accuracy_score",
+  cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
+  learners = c("SGDClassifier", "MultinomialNB")
+)
+
+# Mean cross-validated score of the best_estimator
+pipe$best_score_
+
+# Best parameters during tuning
+pipe$best_params_
+
+# Make predictions
+preds <- pipe$predict(data_splits$x_test)
+head(preds)
+
+# Performance on test set #
+# Can be done using the pipe's score() method
+pipe$score(data_splits$x_test, data_splits$y_test)
+
+# Or using dplyr
+data_splits$y_test %>%
+  data.frame() %>%
+  dplyr::rename(true = '.') %>%
+  dplyr::mutate(
+    pred = preds,
+    check = true == preds,
+    check = sum(check) / nrow(.)
+  ) %>%
+  dplyr::pull(check) %>%
+  unique
+
+# We can also use other metrics, such as the Class Balance Accuracy score
+pxtextmineR::class_balance_accuracy_score_r(
+  data_splits$y_test,
+  preds
+)
+```
+
+### Assessing pipeline performance
+Let's pass our fitted pipeline `pipe` to `factory_model_performance_r` to 
+evaluate how well it did.
+
+```{r, include = TRUE}
+# Assess model performance
+pipe_performance <- pxtextmineR::factory_model_performance_r(
+  pipe = pipe,
+  x_train = data_splits$x_train,
+  y_train = data_splits$y_train,
+  x_test = data_splits$x_test,
+  y_test = data_splits$y_test,
+  metric = "accuracy_score")
+
+names(pipe_performance)
+
+# Let's compare pipeline performance for different tunings with a range of
+# metrics averaging the cross-validation metrics for each fold.
+pipe_performance$
+  tuning_results %>%
+  dplyr::select(learner, dplyr::contains("mean_test"))
+
+# A glance at the (hyper)parameters and their tuned values
+pipe_performance$
+  tuning_results %>%
+  dplyr::select(learner, dplyr::contains("param_")) %>%
+  str()
+```
+
+The following bar plot reports the performance of the best of each fitted 
+classifier with four different metrics. Thus, if, say, two classifiers were 
+tried out, e.g. Multinomial Naive Bayes and Random Forest, and each one was fit 
+with, say, 10 different tunings, the bar plot would plot the best of the 
+Multinomial Naive Bayes and the best of the Random Forest models; the "best" 
+being defined here according to the specified `metric` argument that was
+used to fit the pipeline (see `factory_pipeline_r` and 
+`factory_model_performance_r`). The models are ordered in descending order, from
+left to right, according to the specified metric.
+
+```{r fig.asp = 0.8, fig.width = 8}
+# Learner performance barplot
+pipe_performance$p_compare_models_bar
+```
+
+Remember that we tried three models: Logistic regression (`SGDClassifier` with 
+"log" loss), linear SVM (`SGDClassifier` with "hinge" loss) and `MultinomialNB`.
+Do not be surprised if one of these models does not show on the plot. There are 
+numerous values for the different (hyper)parameters (recall, most of which are 
+set internally) and only `n_iter = 10` iterations in this example. As with
+`factory_pipeline_r` the choice of which (hyper)parameter values to try out is 
+random, one or more classifiers may not be chosen. Increasing `n_iter` to a 
+larger number would avoid this, at the expense of longer fitting times (but with
+a possibly more accurate pipeline).
+
+```{r, include = TRUE}
+# Predictions on test set
+preds <- pipe_performance$pred
+head(preds)
+
+################################################################################
+# NOTE!!! #
+################################################################################
+# After calculating performance metrics on the test set,
+# pxtextmineR::factory_model_performance_r fits the pipeline on the WHOLE
+# dataset (train + test). Hence, do not be surprised that the pipeline's
+# score() method will now return a dramatically improved score on the test
+# set- the refitted pipeline has now "seen" the test dataset.
+pipe_performance$pipe$score(data_splits$x_test, data_splits$y_test)
+pipe$score(data_splits$x_test, data_splits$y_test)
+
+# We can confirm this score by having the re-fitted pipeline predict x_test
+# again. The predictions will be better and the new accuracy score will be
+# the inflated one.
+preds_refitted <- pipe$predict(data_splits$x_test)
+
+score_refitted <- data_splits$y_test %>%
+  data.frame() %>%
+  dplyr::rename(true = '.') %>%
+  dplyr::mutate(
+    pred = preds_refitted,
+    check = true == preds_refitted,
+    check = sum(check) / nrow(.)
+  ) %>%
+  dplyr::pull(check) %>%
+  unique()
+
+score_refitted
+
+# Compare this to the ACTUAL performance on the test dataset
+preds_actual <- pipe_performance$pred
+
+score_actual <- data_splits$y_test %>%
+  data.frame() %>%
+  dplyr::rename(true = '.') %>%
+  dplyr::mutate(
+    pred = preds_actual,
+    check = true == preds_actual,
+    check = sum(check) / nrow(.)
+  ) %>%
+  dplyr::pull(check) %>%
+  unique()
+
+score_actual
+
+score_refitted - score_actual
+```
+
+### Making predictions
+This is where `factory_predict_unlabelled_text_r` comes in handy.
+
+```{r, include = TRUE}
+# Make predictions #
+# Return data frame with predictions column and all original columns from
+# the supplied data frame
+preds_all_cols <- pxtextmineR::factory_predict_unlabelled_text_r(
+  dataset = pxtextmineR::text_data,
+  predictor = "feedback",
+  pipe_path_or_object = pipe,
+  column_names = "all_cols")
+
+str(preds_all_cols)
+
+# Return data frame with predictions column only
+preds_preds_only <- pxtextmineR::factory_predict_unlabelled_text_r(
+  dataset = pxtextmineR::text_data,
+  predictor = "feedback",
+  pipe_path_or_object = pipe,
+  column_names = "preds_only")
+
+head(preds_preds_only)
+
+# Return data frame with predictions column and columns label and feedback from
+# the supplied data frame
+preds_label_text <- pxtextmineR::factory_predict_unlabelled_text_r(
+  dataset = pxtextmineR::text_data,
+  predictor = "feedback",
+  pipe_path_or_object = pipe,
+  column_names = c("label", "feedback"))
+
+str(preds_label_text)
+
+# Return data frame with the predictions column name supplied by the user
+preds_custom_preds_name <- pxtextmineR::factory_predict_unlabelled_text_r(
+  dataset = pxtextmineR::text_data,
+  predictor = "feedback",
+  pipe_path_or_object = pipe,
+  column_names = "preds_only",
+  preds_column = "predictions")
+
+head(preds_custom_preds_name)
+```
+
+### All in one go
+Function `text_classification_pipeline_r` conveniently runs 
+`factory_data_load_and_split_r`, `factory_pipeline_r` and 
+`factory_model_performance_r` in one go.
+
+```{r, include = TRUE}
+# We can prepare the data, build and fit the pipeline, and get performance
+# metrics, in two ways. One way is to run the factory_* functions independently
+# The commented out script right below would do exactly that.
+
+# Prepare training and test sets
+# data_splits <- pxtextmineR::factory_data_load_and_split_r(
+#   filename = pxtextmineR::text_data,
+#   target = "label",
+#   predictor = "feedback",
+#   test_size = 0.90) # Make a small training set for a faster run in this example
+#
+# # Fit the pipeline
+# pipe <- pxtextmineR::factory_pipeline_r(
+#   x = data_splits$x_train,
+#   y = data_splits$y_train,
+#   tknz = "spacy",
+#   ordinal = FALSE,
+#   metric = "accuracy_score",
+#   cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
+#   learners = c("SGDClassifier", "MultinomialNB")
+# )
+#
+# # Assess model performance
+# pipe_performance <- pxtextmineR::factory_model_performance_r(
+#   pipe = pipe,
+#   x_train = data_splits$x_train,
+#   y_train = data_splits$y_train,
+#   x_test = data_splits$x_test,
+#   y_test = data_splits$y_test,
+#   metric = "class_balance_accuracy_score")
+
+# Alternatively, we can use text_classification_pipeline_r() to do everything in
+# one go.
+text_pipe <- pxtextmineR::text_classification_pipeline_r(
+  filename = pxtextmineR::text_data,
+  target = 'label',
+  predictor = 'feedback',
+  test_size = 0.33,
+  ordinal = FALSE,
+  tknz = "spacy",
+  metric = "class_balance_accuracy_score",
+  cv = 2, n_iter = 10, n_jobs = 1, verbose = 3,
+  learners = c("SGDClassifier", "MultinomialNB"),
+  reduce_criticality = FALSE,
+  theme = NULL
+)
+
+names(text_pipe)
+ 
+# Let's compare pipeline performance for different tunings with a range of
+# metrics averaging the cross-validation metrics for each fold.
+text_pipe$
+  tuning_results %>%
+  dplyr::select(learner, dplyr::contains("mean_test"))
+
+# A glance at the (hyper)parameters and their tuned values
+text_pipe$
+  tuning_results %>%
+  dplyr::select(learner, dplyr::contains("param_")) %>%
+  str()
+```
+
+```{r fig.asp = 0.8, fig.width = 8}
+# Learner performance barplot
+text_pipe$p_compare_models_bar
+```
+
+```{r, include = TRUE}
+# Predictions on test set
+preds <- text_pipe$pred
+head(preds)
+head(sort(text_pipe$index_training_data))
+
+# Let's subset the original data set
+text_dataset <- pxtextmineR::text_data
+rownames(text_dataset) <- 0:(nrow(text_dataset) - 1)
+data_train <- text_dataset[text_pipe$index_training_data, ]
+data_test <- text_dataset[text_pipe$index_test_data, ]
+str(data_train)
+
+```
+
+## Other functions
+There are a few helper functions that Python library `pxtextmining` and its R
+wrapper `pxtextmineR` use in the background that are worth making available in 
+R:
+
+- `class_balance_accuracy_score_r` calculates Mosley's (2013) Class Balance 
+  Accuracy score, a metric that is particularly useful when there are class 
+  imbalances in the dataset.
+- `sentiment_scores_r` calculates sentiment indicators from
+  [`TextBlob`](https://textblob.readthedocs.io/en/dev/) and
+  [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
+  
+### Class Balance Accuracy score
+According to Mosley (2013, abstract), "[...] models chosen by maximizing the 
+training class balance accuracy consistently yield both high overall accuracy 
+and per class recall on the test sets compared to the models chosen by other 
+criteria." Our pipeline's default metric is Class Balance Accuracy, although 
+other metrics are also possible, namely standard accuracy, Balanced Accuracy, 
+and Matthews Correlation Coefficient. See this [User Guide](https://scikit-learn.org/stable/modules/classes.html#classification-metrics).
+
+```{r, include = TRUE}
+x <- pxtextmineR::text_data %>%
+  dplyr::mutate(label_pred = sample(label, size = nrow(.))) # Mock predictions column
+
+pxtextmineR::class_balance_accuracy_score_r(x$label, x$label_pred)
+```
+
+### Sentiment scores
+Function `sentiment_scores_r` complements existing sentiment analysis packages 
+in R (e.g. `tidytext`or `quanteda.sentiment`) with the popular Python
+sentiment analysis libraries [`TextBlob`](https://textblob.readthedocs.io/en/dev/) 
+and [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).
+
+`TextBlob` calculates two indicators, namely *polarity* and
+*subjectivity*. The polarity score is a float within the range  `[-1, 1]`,
+where -1 is for very negative sentiment, +1 is for very  positive
+sentiment, and 0 is for neutral sentiment. The subjectivity is a float
+within the range `[0, 1]`, where 0 is very objective and 1 is very
+subjective.
+
+`vaderSentiment` assigns to the given text three sentiment proportions
+(positive, negative and neutral) whose scores sum to 1. It also
+calculates a compound score that is a float in `[-1, 1]`, similar to
+`TextBlob`'s polarity.
+
+```{r, include = TRUE}
+sentiments <- pxtextmineR::text_data %>%
+  dplyr::select(feedback) %>%
+  pxtextmineR::sentiment_scores_r()
+
+head(sentiments)
+apply(sentiments, 2, range)
+```
+
+## References
+Mosley L. (2013). A balanced approach to the multi-class imbalance problem.
+_Graduate Theses and Dissertations_. 13537.
+https://lib.dr.iastate.edu/etd/13537.
+
+Pedregosa F., Varoquaux G., Gramfort A., Michel V., Thirion B., Grisel O., Blondel M., Prettenhofer P., Weiss R., Dubourg V., Vanderplas J., Passos A., Cournapeau D., Brucher M., Perrot M. & Duchesnay E. (2011), Scikit-learn: Machine Learning in Python. 
+_Journal of Machine Learning Research_ 12:2825–2830.
