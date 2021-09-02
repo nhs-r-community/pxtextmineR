@@ -96,6 +96,7 @@ with no issues. This requires the following steps:
 1. Activate it and install `pxtextmining` and the `spaCy` models:
    ```
    pip install pxtextmining
+   pip install wheel
    pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
    pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz
 
