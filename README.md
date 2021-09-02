@@ -114,7 +114,7 @@ with no issues. This requires the following steps:
     replace "name_or_path_to_venv_manager" with "conda" or "miniconda" 
     (unquoted) respectively. If  using a Virtual Python Environment, replace 
     "name_or_path_to_venv_manager" with the path to the virtual environment's 
-    `python.exe` e.g. `/home/user/venvs/myvenv/bin/python`.
+    `python.exe` e.g. `/home/user/venvs/myvenv`.
 1. Good idea to restart R Studio.
 1. Run `devtools::install_github("nhs-r-community/pxtextmineR")` in the R 
    console.
