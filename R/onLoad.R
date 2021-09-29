@@ -8,7 +8,7 @@
   # Better use grepl instead of e.g. `if ("condaenv" %in% venv_manager)` because
   # the supplied venv can be "[e]ither the name of, or the path to, a Python
   # virtual environment." (see reticulate::use_python).
-  if (grepl("condaenv", venv_manager)) {
+  if (grepl("conda", venv_manager)) {
     reticulate::use_condaenv(condaenv = venv, required = TRUE)
   } else if (grepl("miniconda", venv_manager)) {
     reticulate::use_miniconda(condaenv = venv, required = TRUE)
