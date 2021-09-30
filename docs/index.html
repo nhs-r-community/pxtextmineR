@@ -12,13 +12,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="An R Wrapper for Python's " pxtextmining library>
-<meta property="og:description" content="An R wrapper for Pythons [`pxtextmining`](https://pypi.org/project/pxtextmining/) 
+<meta property="og:description" content="An R wrapper for Pythons [`pxtextmining`](https://pypi.org/project/pxtextmining/)
   library- a pipeline to classify text-based patient experience data.\n
-  Package `pxtextmineR` does not wrap _everything_ from `pxtextmining`, but 
-  selected functions that will offer R users new opportunities for modelling. For 
-  example, the whole [`Scikit-learn`](https://scikit-learn.org/stable/index.html) 
-  (Pedregosa et al., 2011) text classification pipeline is wrapped, as 
-  well as helper functions for e.g. sentiment analysis with Pythons 
+  Package `pxtextmineR` does not wrap _everything_ from `pxtextmining`, but
+  selected functions that will offer R users new opportunities for modelling. For
+  example, the whole [`Scikit-learn`](https://scikit-learn.org/stable/index.html)
+  (Pedregosa et al., 2011) text classification pipeline is wrapped, as
+  well as helper functions for e.g. sentiment analysis with Pythons
   [`textBlob`](https://textblob.readthedocs.io/en/dev/) and
   [`vaderSentiment`](https://pypi.org/project/vaderSentiment/).">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">pxtextmineR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -48,7 +48,7 @@
 <li>
   <a href="index.html">
     <span class="fas fa-home fa-lg"></span>
-     
+
   </a>
 </li>
 <li>
@@ -57,7 +57,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -75,7 +75,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -109,20 +109,23 @@
 </li>
 <li>
 <p>We also need to install a couple of <a href="https://github.com/explosion/spacy-models"><code>spaCy</code></a> models in <code>r-reticulate</code>. These are obtained from URL links and thus need to be installed separately. In the R console run:</p>
-<pre><code><a href="https://rdrr.io/r/base/system.html">system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
+<pre><code><a href="https://rdrr.io/r/base/system.html">system("pip install wheel")
+
+system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")</a></code></pre>
 </li>
 </ol>
 <p>All steps in one go:</p>
 <pre><code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")
-# If not using Conda, comment out the next two lines and uncomment the two lines 
+# If not using Conda, comment out the next two lines and uncomment the two lines
 # following them.
 reticulate::conda_create("r-reticulate")
 reticulate::use_condaenv("r-reticulate", required = TRUE)
 # reticulate::virtualenv_create("r-reticulate")
 # reticulate::use_virtualenv("r-reticulate", required = TRUE)
 reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)
+system("pip install wheel")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
 </a></code></pre>
@@ -140,6 +143,7 @@ system("pip install https://github.com/explosion/spacy-models/releases/download/
 <li>
 <p>Activate it and install <code>pxtextmining</code> and the <code>spaCy</code> models:</p>
 <pre><code>pip install pxtextmining
+pip install wheel
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz
 </code></pre>
@@ -148,7 +152,16 @@ pip install https://github.com/explosion/spacy-models/releases/download/en_core_
 <p>Use a text editor to open your <code>.Renviron</code> file, normally located in <code>~/.Renviron</code>, and add the following lines:</p>
 <pre><code>PXTEXTMINER_PYTHON_VENV_MANAGER=name_or_path_to_venv_manager
 PXTEXTMINER_PYTHON_VENV=name_of_venv</code></pre>
-<p>where “name_of_venv” should be replaced by the name of the virtual environment and “name_or_path_to_venv_manager” should be replaced by the name or path to the virtual environment manager. If using Conda or Miniconda, replace “name_or_path_to_venv_manager” with “conda” or “miniconda” (unquoted) respectively. If using a Virtual Python Environment, replace “name_or_path_to_venv_manager” with the path to the virtual environment’s <code>python.exe</code> e.g. <code>/home/user/venvs/myvenv/bin/python</code>.</p>
+<p>where "name_of_venv" should be replaced by the name of the virtual
+    environment (unquoted) and "name_or_path_to_venv_manager" should be replaced
+    by the name of the virtual environment manager or the path to the virtual
+    environment (unquoted). In more detail:.</p>
+
+    <ul><p>If using Conda or Miniconda, replace "name_or_path_to_venv_manager" with
+      "conda" or "miniconda" (unquoted) respectively.</p></ul>
+    <ul><p>If  using a Virtual Python Environment, replace
+      "name_or_path_to_venv_manager" with the path to the virtual environment,
+      e.g. <code>home/user/venvs/myvenv</code>.</p></ul>
 </li>
 <li><p>Good idea to restart R Studio.</p></li>
 <li><p>Run <code><a href="https://devtools.r-lib.org//reference/remote-reexports.html">devtools::install_github("nhs-r-community/pxtextmineR")</a></code> in the R console.</p></li>
@@ -200,7 +213,7 @@ PXTEXTMINER_PYTHON_VENV=name_of_venv</code></pre>
       </footer>
 </div>
 
-  
+
 
 
   </body>

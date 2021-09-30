@@ -53,6 +53,7 @@ There are a few things that need to be done to install and set up `pxtextmineR`.
    In the R console run:
    
    ```
+   system("pip install wheel")
    system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
    
    system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
@@ -69,6 +70,7 @@ reticulate::use_condaenv("r-reticulate", required = TRUE)
 # reticulate::virtualenv_create("r-reticulate")
 # reticulate::use_virtualenv("r-reticulate", required = TRUE)
 reticulate::py_install(envname = "r-reticulate", packages = "pxtextmining", pip = TRUE)
+system("pip install wheel")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz")
 system("pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz")
 
@@ -96,6 +98,7 @@ with no issues. This requires the following steps:
 1. Activate it and install `pxtextmining` and the `spaCy` models:
    ```
    pip install pxtextmining
+   pip install wheel
    pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
    pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-2.3.1/en_core_web_lg-2.3.1.tar.gz
 
@@ -109,12 +112,15 @@ with no issues. This requires the following steps:
     ```
  
     where "name_of_venv" should be replaced by the name of the virtual 
-    environment and "name_or_path_to_venv_manager" should be replaced by the 
-    name or path to the virtual environment manager. If using Conda or Miniconda, 
-    replace "name_or_path_to_venv_manager" with "conda" or "miniconda" 
-    (unquoted) respectively. If  using a Virtual Python Environment, replace 
-    "name_or_path_to_venv_manager" with the path to the virtual environment's 
-    `python.exe` e.g. `/home/user/venvs/myvenv/bin/python`.
+    environment (unquoted) and "name_or_path_to_venv_manager" should be replaced 
+    by the name of the virtual environment manager or the path to the virtual 
+    environment (unquoted). In more detail:
+    
+    - If using Conda or Miniconda, replace "name_or_path_to_venv_manager" with 
+      "conda" or "miniconda" (unquoted) respectively. 
+    - If  using a Virtual Python Environment, replace 
+      "name_or_path_to_venv_manager" with the path to the virtual environment, 
+      e.g. `/home/user/venvs/myvenv`. 
 1. Good idea to restart R Studio.
 1. Run `devtools::install_github("nhs-r-community/pxtextmineR")` in the R 
    console.
